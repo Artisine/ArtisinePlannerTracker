@@ -1,0 +1,108 @@
+* {
+	padding: 0!important;
+	margin: 0!important;
+	box-sizing: border-box!important;
+}
+
+html, body {
+	width: 100vw;
+	height: 100vh;
+	background-color: white;
+
+	min-width: 200px;
+}
+
+
+.card {
+	border: 1px solid black;
+}
+
+
+div[name="curves"] {
+	z-index: 2;
+}
+
+div[name="dialogue-box"] {
+	z-index: 1;
+	position: absolute;
+	/* background-color: rgb(182, 182, 182); */
+	width: 90%;
+	height: 90%;
+	top: 5%;
+	left: 5%;
+	/* transform: translate(-50%, -50%); */
+}
+button#signin_submit, button#signup_submit {
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+@media only screen and (min-width: 600px) {
+	div[name="dialogue-box"] {
+		z-index: 1;
+		position: absolute;
+		/* background-color: rgb(182, 182, 182); */
+		width: 400px;
+		height: 600px;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+@media only screen and (min-width: 992px) {
+	div[name="dialogue-box"] {
+		z-index: 1;
+		position: absolute;
+		/* background-color: rgb(182, 182, 182); */
+		width: 400px;
+		height: 600px;
+		top: 50%;
+		left: clamp(250px, 350px, 25%);
+		transform: translate(-50%, -50%);
+	}
+
+	button#signin_submit {
+		width: 100px;
+		height: 100%;
+	}
+	button#signup_submit {
+		width: 100px;
+		height: 100%;
+	}
+}
+
+
+div[name="dialogue-box"] > .card {
+	width: 100%;
+	height: 100%;
+}
+div[name="dialogue-box"] #signin_body-1 form [name="right"] , div[name="dialogue-box"] #signin_body-2 form [name="right"] {
+	display: flex;
+	justify-content: end;
+	align-items: center;
+	width: 100%;
+	height: 40px;
+}
+
+#signin_signup-button {
+	cursor: pointer;
+}
+#signup_back-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	cursor: pointer;
+}
+
+#signin_body-2 {
+	display: none;
+}
+
+
+
+
+
