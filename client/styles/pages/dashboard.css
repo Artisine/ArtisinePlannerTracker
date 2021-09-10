@@ -113,34 +113,46 @@ section[name="dashboard"] {
 	z-index: 3;
 
 	position: fixed;
-	right: 20px;
-	bottom: 20px;
+	right: 3rem;
+	bottom: 3rem;
 }
 #dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button {
 	border-radius: 100%;
-	width: clamp(25px, 4rem, 100px);
-	height: clamp(25px, 4rem, 100px);
+	width: 3rem;
+	height: 3rem;
 	/* border: 2px solid var(--bs-gray); */
 	background-color: var(--bs-white);
-	box-shadow: 0 0 0.25rem var(--bs-gray);
+	box-shadow: 0 0 0.125rem var(--bs-gray);
 	/* position: fixed; */
+	opacity: 1;
+
+	pointer-events: auto;
 }
 #dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:hover {
 	background-color: hsl(0, 0%, 95%);
-	box-shadow: 0.125rem 0.125rem 0.5rem var(--bs-gray);
+	box-shadow: 0.125rem 0.125rem 0.25rem var(--bs-gray);
 }
 #dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:focus-within {
-	
+	display: block;
 }
 #dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:active {
 	background-color: hsl(0, 0%, 70%);
+	display: block;
 }
 #dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button > img[name="questionMark"] {
 	width: 75%;
 	height: 75%;
 	/* position: relative; */
 }
+#dashboard_content > div[name="float-help"] > div[name="help-menu"] {
+	display: none;
+	position: fixed;
 
+	bottom: 7rem;
+	right: 3rem;
 
+	width: 200px;
+	height: 300px;
+	box-shadow: 0 0 0.25rem var(--bs-gray);
 
-
+}
