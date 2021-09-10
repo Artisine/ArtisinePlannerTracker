@@ -1,13 +1,145 @@
 
 
+:root {
+	/* 0°, 16%, 83% */
+	
+
+	/* --dashboard-sidebar-bg: hsl(0, 16%, 80%); */
+	--dashboard-sidebar-tc: var(--notion-light-sidebar-tc);
+	--dashboard-sidebar-bg: var(--notion-light-sidebar-bg);
+
+	--dashboard-content-bg: hsl(0, 0%, 100%);
+}
+
 section[name="dashboard"] {
 	width: 100vw;
 	height: 100vh;
-	background-color: red;
+	/* background-color: red; */
+}
+
+#dashboard_sidebar {
+	width: 100%;
+	height: 100vh;
+	background-color: var(--dashboard-sidebar-bg);
+
+	/* position: absolute; */
+}
+#dashboard_sidebar > div[name="centered"] {
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+}
+#dashboard_sidebar > div[name="centered"] > ul.list-group {
+	width: 100%;
+}
+#dashboard_sidebar > div[name="centered"] > ul.list-group .list-group-item {
+	min-height: 2rem;
+	/* border-radius: 1rem 0 0 1rem; */
+	border-radius: 0;
+	border-right: 0;
+	display: grid;
+	place-items: center;
+
+	background-color: var(--dashboard-sidebar-bg);
+	color: var(--dashboard-sidebar-tc);
+	transition: 0.2s;
+}
+#dashboard_sidebar > div[name="centered"] > ul.list-group .list-group-item:hover , #dashboard_sidebar > div[name="centered"] > ul.list-group .list-group-item:focus-within {
+	background-color: var(--bs-light);
+	color: var(--bs-dark);
 }
 
 
 
+
+
+
+#dashboard_content {
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	background-color: var(--dashboard-content-bg);
+
+	/* background-color: wheat; */
+}
+
+#dashboard_content > div[name="nothinghere"] {
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 100%;
+	height: 100%;
+
+	z-index: 1;
+
+	/* background-color: tomato; */
+}
+#dashboard_content > div[name="nothinghere"] > div[name="centered"] {
+	width: max-content;
+	height: calc(25% + 100px);
+	
+	display: flex;
+	justify-content:space-around;
+	align-items: center;
+	flex-direction: column;
+	
+}
+#dashboard_content > div[name="nothinghere"] > div[name="centered"] > img[name="thinkingEmoji"] {
+	width: clamp(50px, 80%, 200px);
+	height: clamp(50px, 80%, 200px);
+
+	filter: drop-shadow(0.5rem 0.5rem 0.75rem var(--bs-gray));
+}
+#dashboard_content > div[name="nothinghere"] > div[name="centered"] > h4 {
+	text-align: center;
+	width: 40rem;
+}
+
+#dashboard_content > div[name="float-help"] {
+	/* width: 100%; */
+	/* height: 100%; */
+	/* display: block; */
+	/* position: fixed; */
+
+	z-index: 3;
+}
+#dashboard_content > div[name="float-help"] > div[name="button-container"] {
+	z-index: 3;
+
+	position: fixed;
+	right: 20px;
+	bottom: 20px;
+}
+#dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button {
+	border-radius: 100%;
+	width: clamp(25px, 4rem, 100px);
+	height: clamp(25px, 4rem, 100px);
+	/* border: 2px solid var(--bs-gray); */
+	background-color: var(--bs-white);
+	box-shadow: 0 0 0.25rem var(--bs-gray);
+	/* position: fixed; */
+}
+#dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:hover {
+	background-color: hsl(0, 0%, 95%);
+	box-shadow: 0.125rem 0.125rem 0.5rem var(--bs-gray);
+}
+#dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:focus-within {
+	
+}
+#dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:active {
+	background-color: hsl(0, 0%, 70%);
+}
+#dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button > img[name="questionMark"] {
+	width: 75%;
+	height: 75%;
+	/* position: relative; */
+}
 
 
 

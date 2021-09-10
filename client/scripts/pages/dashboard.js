@@ -1,12 +1,17 @@
 
-export class DashboardUI {
+import {
+	queryElement
+} from "../client.js";
 
+
+export class DashboardUI {
+	static ElementReference = queryElement(`section[name="dashboard"]`);
 }
 
 
 export default class Dashboard {
-
 	static UI = DashboardUI;
+	static ElementReference = this.UI.ElementReference;
 
 	static onceInit() {
 

@@ -22,7 +22,21 @@ function quadraticFormula(a, b, c) {
 	return [positiveX, negativeX];
 }
 
+/**
+ * 
+ * @param {HTMLElement} elem 
+ */
+function hideElement(elem) {
+	elem.style.display = "none";
+}
 
+/**
+ * 
+ * @param {HTMLElement} elem 
+ */
+function showElement(elem) {
+	elem.style.display = "block";
+}
 
 
 
@@ -33,7 +47,8 @@ import LoginScreen from "./pages/signin.js";
 import Dashboard from "./pages/dashboard.js";
 
 
-
+hideElement(LoginScreen.ElementReference);
+showElement(Dashboard.ElementReference)
 
 
 

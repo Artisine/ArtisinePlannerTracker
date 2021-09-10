@@ -17,17 +17,26 @@ html, body {
 
 
 :root {
-	--bgcanv_cornerconfig_inactive: hsla(212, 73%, 20%, 0.50);
-	--bgcanv_cornerconfig_active: hsl(212, 73%, 20%);
+	/* --bgcanv_cornerconfig_inactive: hsla(212, 73%, 20%, 0.50); */
+	/* --bgcanv_cornerconfig_active: hsl(212, 73%, 20%); */
+	--bgcanv_cornerconfig_inactive: hsla(217, 0%, 60%, 0.5);
+	--bgcanv_cornerconfig_active: hsl(217, 0%, 30%);
+
+	--notion-light-sidebar-bg: hsl(45, 20%, 96%);
+	--notion-dark-sidebar-bg: hsl(203, 7%, 23%);
+	--notion-light-sidebar-tc: rgba(25, 23, 17, 0.6);
+	--notion-dark-sidebar-tc: rgba(255, 255, 255, 0.6);
 }
 
 
 /* Default display values, show Sign-In first */
 section[name="signin"] {
 	display: block;
+	/* display: none; */
 }
 section[name="dashboard"] {
 	display: none;
+	/* display: block; */
 }
 
 

@@ -5,6 +5,8 @@ import {
 
 export default class LoginScreen {
 
+	static ElementReference = queryElement(`section[name="signin"]`);
+
 	static backgroundCanvasStuff = {
 		canvas: undefined,
 		ctx: undefined,
@@ -27,36 +29,7 @@ export default class LoginScreen {
 		});
 
 		const section_signin = queryElement(`section[name="signin"]`);
-		// const MO_config = {
-		// 	attributes: true,
-		// 	childList: true,
-		// 	subtree: true
-		// };
-		// const MO_callback = (mutationsList, observer)=>{
-		// 	for(const mutation of mutationsList) {
-		// 		// if (mutation.type === 'childList') {
-		// 		// 	console.log('A child node has been added or removed.');
-		// 		// }
-		// 		if (mutation.type === "attributes") {
-		// 			console.log(`The ${mutation.attributeName}`);
-		// 			if (mutation.attributeName === "width") {
-		// 				// console.log(`The ${mutation.attributeName} is now ${mutation}`);
-		// 				if (parseInt(section_signin.width) < 600) {
-		// 					// mobile!
-		// 					if (LoginScreen.backgroundCanvasStuff.active) {
-		// 						LoginScreen.terminate();
-		// 					}
-		// 				} else if (!LoginScreen.backgroundCanvasStuff.active) {
-		// 					LoginScreen.init();
-		// 				}
-		// 			}
-		// 		}
-		// 	}
-		// };
-		// const MO = new MutationObserver(MO_callback);
-		// MO.observe(section_signin, MO_config);
-
-		// do not disconnect?
+		
 
 		this.init();
 	}
@@ -272,8 +245,9 @@ export default class LoginScreen {
 		LoginScreen.whenSliderChanged();
 	}
 	static setupBackgroundCanvas() {
-		for (let i=4; i<8; i+=1) {
-			this.backgroundCanvasStuff.floatingBubbleColours.push(`hsl(212, 72%, ${i * 10}%)`);
+		for (let i=7; i<10; i+=1) {
+			// this.backgroundCanvasStuff.floatingBubbleColours.push(`hsl(212, 72%, ${i * 10}%)`);
+			this.backgroundCanvasStuff.floatingBubbleColours.push(`hsl(45, 20%, ${i*10}%)`);
 		}
 
 		this.backgroundCanvasStuff.canvas = queryElement("canvas#signin_background-canvas");

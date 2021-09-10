@@ -1,5 +1,50 @@
 
 
+.custom-shape-divider-bottom-1631119459 {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	overflow: hidden;
+	line-height: 0;
+}
+
+.custom-shape-divider-bottom-1631119459 svg {
+	position: relative;
+	display: block;
+	width: calc(218% + 1.3px);
+	height: 282px;
+	transform: rotateY(180deg);
+}
+
+.custom-shape-divider-bottom-1631119459 .shape-fill {
+	/* fill: #4A90E2; */
+	fill: var(--notion-light-sidebar-bg);
+}
+
+.custom-blob-top-1 {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	overflow: hidden;
+	line-height: 0;
+}
+.custom-blob-top-1 svg {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 400px;
+	/* transform: rotateY(180deg); */
+}
+.custom-blob-top-1 .shape-fill {
+	/* fill: #4A90E2; */
+	fill: var(--notion-light-sidebar-bg);
+}
+
+
+
+
 
 div[name="curves"] {
 	z-index: 2;
@@ -18,6 +63,19 @@ div[name="dialogue-box"] {
 	left: 5%;
 	/* transform: translate(-50%, -50%); */
 	transform: translateY(-50%);
+
+}
+div[name="dialogue-box"] > article.card {
+	background-color: hsl(217, 0%, 95%);
+}
+div[name="dialogue-box"] > article.card input {
+	background-color: hsl(217, 0%, 80%);
+}
+div[name="dialogue-box"] > article.card input:hover {
+	background-color: hsl(217, 0%, 85%);
+}
+div[name="dialogue-box"] > article.card input:focus-within {
+	background-color: hsl(217, 0%, 90%);
 }
 
 
@@ -108,7 +166,8 @@ div[name="background-canvas"] {
 	height: 100%;
 	display: block;
 	/* border: 1px solid #00aac0; */
-	background-color: hsl(212, 73%, 25%);
+	/* background-color: hsl(212, 73%, 25%); */
+	background-color: hsl(45, 20%, 75%);
 }
 
 div[name="background-canvas_corner-config"] {
