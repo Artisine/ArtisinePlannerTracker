@@ -24,6 +24,18 @@
 		<div name="background-canvas" class="">
 			<canvas id="signin_background-canvas">uhoh</canvas>
 		</div>
+		<div name="background-canvas_corner-config" class="">
+			<div id="signin_background-canvas_corner-config">
+				<form id="signin_background-canvas_corner-config_form" onsubmit="return false;">
+					<div class="form-group" style="height: 100%;">
+						<div class="input-group" style="justify-content: center; align-items: center; height: 100%;">
+							<input id="signin_background-canvas_corner-config_slider" class="form-range" type="range" min="0" max="100" value="50">
+
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
 		<div name="dialogue-box" class="light">
 			<article class="card shadow-sm">
 				<!-- <header class="card-header">
@@ -119,20 +131,25 @@
 						</form>
 					</div>
 				</section>
-				<footer class="card-footer">
+				<!-- <footer class="card-footer">
 					<p>Made by @Artisine</p>
-				</footer>
+				</footer> -->
 			</article>
 		</div>
 	</section>
 
-	
+	<section name="dashboard">
 
-	<script src="scripts/client.js"></script>
-	<link href="./styles/client.css" rel="stylesheet" type="text/css">
-	<link href="./styles/curves.css" rel="stylesheet" type="text/css">
+	</section>
+	
+	
 	<link href="./styles/bootstrap.min.css" rel="stylesheet" type="text/css">
 	<script src="./scripts/bootstrap.bundle.min.js"></script>
+	<script src="scripts/client.js" type="module"></script>
+	<link href="./styles/client.css" rel="stylesheet" type="text/css">
+	<link href="./styles/pages/signin.css" rel="stylesheet" type="text/css">
+	<link href="./styles/pages/dashboard.css" rel="stylesheet" type="text/css">
+	<link href="./styles/curves.css" rel="stylesheet" type="text/css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 </body>

@@ -1,0 +1,154 @@
+
+
+
+div[name="curves"] {
+	z-index: 2;
+}
+
+/* Mobile-first */
+div[name="dialogue-box"] {
+	z-index: 4;
+	position: absolute;
+	/* background-color: rgb(182, 182, 182); */
+	width: 90%;
+	min-height: max-content;
+	/* height: clamp(50vh, 60vh, 67vh); */
+	height: max-content;
+	top: 50vh;
+	left: 5%;
+	/* transform: translate(-50%, -50%); */
+	transform: translateY(-50%);
+}
+
+
+button#signin_submit, button#signup_submit {
+	width: 100%;
+	height: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+@media only screen and (min-width: 600px) {
+	/* For Tablets or very large phones? */
+
+	div[name="dialogue-box"] {
+		z-index: 4;
+		position: absolute;
+		/* background-color: rgb(182, 182, 182); */
+		width: 50%;
+		min-height: max-content;
+		height: clamp(50vh, 60vh, max-content);
+		top: 50vh;
+		left: 50%;
+		transform: translate(-50%, -50%);
+	}
+}
+@media only screen and (min-width: 992px) {
+	/* For Laptops/Desktops */
+
+	div[name="dialogue-box"] {
+		z-index: 4;
+		position: absolute;
+		/* background-color: rgb(182, 182, 182); */
+		width: 400px;
+		min-height: max-content;
+		height: clamp(max-content, 67vh, 80vh);
+		top: 50%;
+		left: clamp(250px, 350px, 25%);
+		transform: translate(-50%, -50%);
+	}
+
+	button#signin_submit {
+		width: 100px;
+		height: 100%;
+	}
+	button#signup_submit {
+		width: 100px;
+		height: 100%;
+	}
+}
+
+
+div[name="dialogue-box"] > .card {
+	width: 100%;
+	height: 100%;
+}
+div[name="dialogue-box"] #signin_body-1 form [name="right"] , div[name="dialogue-box"] #signin_body-2 form [name="right"] {
+	display: flex;
+	justify-content: end;
+	align-items: center;
+	width: 100%;
+	height: 40px;
+}
+
+#signin_signup-button {
+	cursor: pointer;
+}
+#signup_back-button {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	cursor: pointer;
+}
+
+#signin_body-2 {
+	display: none;
+}
+
+
+div[name="background-canvas"] {
+	width: 100vw;
+	height: 100vh;
+	z-index: 1;
+}
+#signin_background-canvas {
+	width: 100%;
+	height: 100%;
+	display: block;
+	/* border: 1px solid #00aac0; */
+	background-color: hsl(212, 73%, 25%);
+}
+
+div[name="background-canvas_corner-config"] {
+	z-index: 3;
+	width: 100%;
+	height: 100%;
+}
+@keyframes fade {
+	from {
+		background-color: var(--bgcanv_cornerconfig_inactive);
+	}
+	to {
+		/* background-color: var(--bgcanv_cornerconfig_active); */
+		background-color: red;
+	}
+}
+#signin_background-canvas_corner-config {
+	width: 100px;
+	height: 100px;
+	background-color: var(--bgcanv_cornerconfig_inactive);
+	position: absolute;
+	right: 1rem;
+	bottom: 1rem;
+	transition: 0.6s;
+	border-radius: 5%;
+	/* display: flex; */
+	padding: 1rem;
+}
+#signin_background-canvas_corner-config:focus-within , #signin_background-canvas_corner-config:hover {
+	background-color: var(--bgcanv_cornerconfig_active);
+}
+#signin_background-canvas_corner-config_form{
+	width: 100%;
+	height: 100%;
+}
+#signin_background-canvas_corner-config_slider {
+	width: 80%;
+	margin-left: 10%;
+	padding: 2rem;
+
+	height: max-content;
+	/* background-color: rgba(68, 132, 206, 0.5); */
+}
