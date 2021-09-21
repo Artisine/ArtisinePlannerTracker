@@ -96,9 +96,13 @@ section[name="dashboard"] {
 
 	filter: drop-shadow(0.5rem 0.5rem 0.75rem var(--bs-gray));
 }
+#dashboard_content > div[name="nothinghere"] > div[name="centered"] > h3 {
+	text-align: center;
+	max-width: 40rem;
+}
 #dashboard_content > div[name="nothinghere"] > div[name="centered"] > h4 {
 	text-align: center;
-	width: 40rem;
+	max-width: 40rem;
 }
 
 #dashboard_content > div[name="float-help"] {
