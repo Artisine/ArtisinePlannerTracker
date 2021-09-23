@@ -9,6 +9,13 @@
 	--dashboard-sidebar-bg: var(--notion-light-sidebar-bg);
 
 	--dashboard-content-bg: hsl(0, 0%, 100%);
+
+	--dashboard-sidebar-width: 250px;
+	
+	--dashboard-sidebar-account-dialogue-height: 3rem;
+
+	--dashboard-sidebar-pagebutton-height: 1.25rem;
+	
 }
 
 section[name="dashboard"] {
@@ -16,7 +23,31 @@ section[name="dashboard"] {
 	height: 100vh;
 	/* background-color: red; */
 }
+div[name="dashboard_row"] {
+	width: 100%;
+	height: 100%;
+	background-color: red;
+	position: relative;
+	display: flex;
+}
+div[name="dashboard_row_sidebar"] {
+	width: var(--dashboard-sidebar-width);
 
+}
+div[name="dashboard_row_content"] {
+	width: calc(100% - var(--dashboard-sidebar-width));
+
+}
+/* @media only screen and (min-width: 600px) {
+	div[name="dashboard_row_sidebar"] {
+		width: 
+	}
+}
+@media only screen and (min-width: 992px) {
+	div[name="dashboard_row_content"] {
+
+	}
+} */
 #dashboard_sidebar {
 	width: 100%;
 	height: 100vh;
@@ -51,6 +82,58 @@ section[name="dashboard"] {
 #dashboard_sidebar > div[name="centered"] > ul.list-group .list-group-item:hover , #dashboard_sidebar > div[name="centered"] > ul.list-group .list-group-item:focus-within {
 	background-color: var(--bs-light);
 	color: var(--bs-dark);
+}
+
+#dashboard_sidebar > div[name="account-dialogue-button"] {
+	height: var(--dashboard-sidebar-account-dialogue-height);
+	/* background-color:hsl(0, 0%, 70%); */
+	background-color: var(--dashboard-sidebar-bg);
+	display: flex;
+	justify-content: left;
+	/* align-items: center; */
+
+	width: 100%;
+	/* position: relative; */
+}
+#dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-left"] {
+	padding: 2rem;
+	background-color: red;
+	height: 100%;
+	width: calc(100% - var(--dashboard-sidebar-account-dialogue-height));
+	/* display: flex;
+	justify-content: space-around;
+	align-items: center; */
+
+	display: block;
+
+
+	position: relative;
+}
+#dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-left"] > div {
+	background-color: lightgreen;
+	/* position: absolute;
+	top: 50%;
+	transform: translateY(-50%); */
+	display: inline-block;
+	position: relative;
+	/* position: absolute; */
+}
+#dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-left"] > div[name="icon"] {
+	padding-left: 1rem;
+	width: 2rem;
+	height: 2rem;
+	background-color: wheat;
+}
+
+#dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-right"] {
+	width: var(--dashboard-sidebar-account-dialogue-height);
+	height: 100%;
+	background-color: lightcoral;
+	/* position: relative; */
+}
+
+#dashboard_sidebar .pagebutton {
+	height: var(--dashboard-sidebar-pagebutton-height);
 }
 
 

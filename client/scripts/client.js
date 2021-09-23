@@ -48,7 +48,7 @@ import Dashboard from "./pages/dashboard.js";
 
 
 hideElement(LoginScreen.ElementReference);
-showElement(Dashboard.ElementReference)
+showElement(Dashboard.ElementReference);
 
 
 
