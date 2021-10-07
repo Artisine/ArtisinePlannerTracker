@@ -132,6 +132,13 @@ div[name="dashboard_row_content"] {
 	/* position: relative; */
 }
 
+
+#dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-right"] > div[name="toggle-button"] {
+	width: 100%;
+	height: 100%;
+	background-color: cyan;
+}
+
 #dashboard_sidebar .pagebutton {
 	height: var(--dashboard-sidebar-pagebutton-height);
 }
