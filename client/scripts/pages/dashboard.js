@@ -19,6 +19,7 @@ export class DashboardUI {
 		"SidebarMinimumWidth": undefined,
 		"SidebarWidth": undefined,
 		"SidebarMaximumWidth": undefined,
+		"SidebarDefaultWidth": undefined,
 		"SidebarElement": undefined,
 		"DraggerWidth": undefined,
 		"DraggerElement": undefined,
@@ -32,12 +33,12 @@ export class DashboardUI {
 
 	static get_css_variable(varName) {
 		const val = window.getComputedStyle(document.documentElement).getPropertyValue(varName);
-		console.log(`key = ${varName}, val = ${val}`);
+		// console.log(`key = ${varName}, val = ${val}`);
 		return val;
 	}
 	static set_css_variable(varName, val) {
 		document.documentElement.style.setProperty(varName, val);
-		console.log(`key = ${varName}, set to ${val}`);
+		// console.log(`key = ${varName}, set to ${val}`);
 	}
 
 	static setup_sidebar_dragger() {
@@ -50,10 +51,12 @@ export class DashboardUI {
 		const cssVar_dashboardSidebarMinWidth = this.get_css_variable("--dashboard-sidebar-minWidth");
 		const cssVar_dashboardSidebarWidth = this.get_css_variable("--dashboard-sidebar-width");
 		const cssVar_dashboardSidebarMaxWidth = this.get_css_variable("--dashboard-sidebar-maxWidth");
+		const cssVar_dashboardSidebarDefaultWidth = this.get_css_variable("--dashboard-sidebar-defaultWidth");
 		const cssVar_dashboardSidebarDraggerWidth = this.get_css_variable("--dashboard-sidebar-dragger-width");
 		this.Variables.SidebarMinimumWidth = parseFloat(cssVar_dashboardSidebarMinWidth);
 		this.Variables.SidebarWidth = parseFloat( cssVar_dashboardSidebarWidth );
 		this.Variables.SidebarMaximumWidth = parseFloat(cssVar_dashboardSidebarMaxWidth);
+		this.Variables.SidebarDefaultWidth = parseFloat(cssVar_dashboardSidebarDefaultWidth);
 		this.Variables.DraggerWidth = parseFloat( cssVar_dashboardSidebarDraggerWidth );
 
 
@@ -77,6 +80,7 @@ export class DashboardUI {
 		// console.log(this.Variables);
 
 		this.Variables.SidebarWidth = this.Variables.SidebarWidth - dx;
+
 		if (this.Variables.SidebarWidth < this.Variables.SidebarMinimumWidth) {
 			this.Variables.SidebarWidth = this.Variables.SidebarMinimumWidth;
 			this.set_css_variable("--dashboard-sidebar-width", `${this.Variables.SidebarWidth}px`);
@@ -102,11 +106,19 @@ export class DashboardUI {
 	}
 	static _sidebarDraggerMouseup() {
 		document.removeEventListener("mousemove", DashboardUI._sidebarDraggerMousemove, false);
+
+		if ( Math.abs(this.Variables.SidebarDefaultWidth - this.Variables.SidebarWidth) <= 25 ) {
+			// snap to default width if within 25px either side
+			this.Variables.SidebarWidth = this.Variables.SidebarDefaultWidth;
+			this.set_css_variable("--dashboard-sidebar-width", `${this.Variables.SidebarWidth}px`);
+			// this._sidebarDraggerMouseup();
+		} 
 		const uic_accountDialogue = [...this.UIComponents.values()].find((item) => item.Name === "account-dialogue");
 		if (uic_accountDialogue !== undefined && uic_accountDialogue.render !== undefined) {
 			uic_accountDialogue.Size = new UDim2(0, this.Variables.SidebarWidth, 0, parseFloat( this.get_css_variable("--dashboard-sidebar-account-dialogue-height")) * parseFloat(this.get_css_variable("font-size")) );
 			uic_accountDialogue.render();
 		}
+		
 	}
 
 	static setup_sidebar_uiComponents() {
@@ -147,11 +159,11 @@ export class DashboardUI {
 
 		[accountDialogue, containerLeft, containerRight, icon, displayName].map((uic) => [uic.id, uic]).forEach((arr) => {
 			this.UIComponents.set(arr[0], arr[1]);
-			console.log(`${arr[0]}, ${arr[1]}, `, this.UIComponents.get(arr[0]));
+			// console.log(`${arr[0]}, ${arr[1]}, `, this.UIComponents.get(arr[0]));
 		});
 
 		accountDialogue.init();
-		console.log([...this.UIComponents.values()]);
+		// console.log([...this.UIComponents.values()]);
 	}
 
 };
@@ -164,6 +176,15 @@ export default class Dashboard {
 	static onceInit() {
 		this.UI.setup_sidebar_dragger();
 		this.UI.setup_sidebar_uiComponents();
+
+		const alphabet = "abcdefghijklmnopqrstuvwxyz";
+		let k = 0;
+		setInterval(()=>{
+			const icon_text = document.querySelector(`div[name="account-dialogue-button"] div[name="icon"] span`);
+			icon_text.innerHTML = `${alphabet[k].toUpperCase()}`;
+			k += 1;
+			if (k >= alphabet.length) k = 0;
+		}, 1000/2);
 	}
 };
 

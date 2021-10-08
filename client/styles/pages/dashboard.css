@@ -8,13 +8,16 @@
 	--dashboard-sidebar-tc: var(--notion-light-sidebar-tc);
 	--dashboard-sidebar-bg: var(--notion-light-sidebar-bg);
 
-	--dashboard-sidebar-button-hover: hsl(0, 0%, 75%);
+	--dashboard-sidebar-tc-darker: rgba(20, 20, 15, 0.8);
+
+	--dashboard-sidebar-button-hover: hsl(0, 0%, 70%);
 
 	--dashboard-content-bg: hsl(0, 0%, 100%);
 
 	--dashboard-sidebar-maxWidth: 500px;
 	--dashboard-sidebar-minWidth: 200px;
 	--dashboard-sidebar-width: 250px;
+	--dashboard-sidebar-defaultWidth: 250px;
 	--dashboard-sidebar-dragger-width: 5px;
 	
 	--dashboard-sidebar-account-dialogue-height: 3rem;
@@ -60,6 +63,8 @@ div[name="dashboard_row_content"] {
 	width: var(--dashboard-sidebar-width);
 	height: 100vh;
 	background-color: var(--dashboard-sidebar-bg);
+	/* color: var(--dashboard-sidebar-tc-darker); */
+
 
 	position: absolute;
 	padding-right: var(--dashboard-sidebar-dragger-width);
@@ -138,6 +143,7 @@ div[name="dashboard_row_content"] {
 }
 #dashboard_sidebar > div[name="account-dialogue-button"]:hover , #dashboard_sidebar > div[name="account-dialogue-button"]:focus-within {
 	background-color: hsl(5, 10%, 85%);
+	cursor: pointer;
 }
 #dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-left"] {
 	padding: 2rem;
@@ -195,6 +201,7 @@ div[name="dashboard_row_content"] {
 	white-space: nowrap;
 	overflow-x: hidden;
 	text-overflow: ellipsis;
+	color: var(--dashboard-sidebar-tc-darker);
 }
 
 #dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-right"] {
@@ -226,7 +233,8 @@ div[name="dashboard_row_content"] {
 
 
 #dashboard_sidebar > div[name="account-dialogue-button"] div[name="toggle-button-padded"]:hover {
-	background-color: var(--dashboard-sidebar-button-hover);
+	/* background-color: var(--dashboard-sidebar-button-hover); */
+	background-color: hsl(5, 10%, 80%);
 	border-radius: 2px;
 	cursor: pointer;
 	color: black;
