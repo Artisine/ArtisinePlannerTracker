@@ -69,6 +69,9 @@ div[name="dashboard_row_content"] {
 	position: absolute;
 	padding-right: var(--dashboard-sidebar-dragger-width);
 	left: 0;
+
+	user-select: none;
+
 }
 #dashboard_sidebar_dragger {
 	width: var(--dashboard-sidebar-dragger-width);
@@ -145,6 +148,9 @@ div[name="dashboard_row_content"] {
 	background-color: hsl(5, 10%, 85%);
 	cursor: pointer;
 }
+#dashboard_sidebar > div[name="account-dialogue-button"]:hover:active {
+	background-color: hsl(0, 5%, 75%);
+}
 #dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-left"] {
 	padding: 2rem;
 	/* background-color: red; */
@@ -202,6 +208,7 @@ div[name="dashboard_row_content"] {
 	overflow-x: hidden;
 	text-overflow: ellipsis;
 	color: var(--dashboard-sidebar-tc-darker);
+	font-size: 1.05rem;
 }
 
 #dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-right"] {
@@ -229,6 +236,7 @@ div[name="dashboard_row_content"] {
 	position: relative;
 
 	color: var(--dashboard-sidebar-tc);
+
 }
 
 
@@ -238,6 +246,10 @@ div[name="dashboard_row_content"] {
 	border-radius: 2px;
 	cursor: pointer;
 	color: black;
+}
+#dashboard_sidebar > div[name="account-dialogue-button"] div[name="toggle-button-padded"]:hover:active {
+	background-color: hsl(5, 5%, 70%);
+	border-radius: 100%;
 }
 
 #dashboard_sidebar > div[name="account-dialogue-button"] div[name="toggle-button-icon"] {
@@ -336,13 +348,14 @@ div[name="dashboard_row_content"] {
 
 	pointer-events: auto;
 }
-#dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:hover {
+#dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:hover, #dashboard_content > div[name="float-help"] > div[name="button-container"]:hover > #dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button {
 	background-color: hsl(0, 0%, 95%);
 	box-shadow: 0.125rem 0.125rem 0.25rem var(--bs-gray);
 }
-#dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:focus-within {
+/* #dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:focus-within {
+	background-color: hsl(0, 0%, 70%);
 	display: block;
-}
+} */
 #dashboard_content > div[name="float-help"] > div[name="button-container"] > button#dashboard_help_help-button:active {
 	background-color: hsl(0, 0%, 70%);
 	display: block;
@@ -352,8 +365,12 @@ div[name="dashboard_row_content"] {
 	height: 75%;
 	/* position: relative; */
 }
-#dashboard_content > div[name="float-help"] > div[name="help-menu"] {
-	display: none;
+
+#dashboard_content>div[name="float-help"]>div[name="button-container"]:hover + #dashboard_content>div[name="help-menu"] , #dashboard_content>div[name="help-menu"]:focus-within {
+	display: block;
+}
+#dashboard_content div[name="help-menu"] {
+	/* display: none; */
 	position: fixed;
 
 	bottom: 7rem;
@@ -362,5 +379,7 @@ div[name="dashboard_row_content"] {
 	width: 200px;
 	height: 300px;
 	box-shadow: 0 0 0.25rem var(--bs-gray);
-
 }
+/* #dashboard_content div[name="help-menu"]:focus-within , #dashboard_content div[name="button-container"]:hover + #dashboard_content div[name="help-menu"] {
+	display: block;
+} */

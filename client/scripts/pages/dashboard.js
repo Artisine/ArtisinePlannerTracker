@@ -23,7 +23,12 @@ export class DashboardUI {
 		"SidebarElement": undefined,
 		"DraggerWidth": undefined,
 		"DraggerElement": undefined,
-		"MousePositionX": undefined
+		"MousePositionX": undefined,
+		"FloatingHelpButtonElement": undefined,
+		"FloatingHelpButtonActive": false,
+		"FloatingHelpButtonClickObserver": undefined,
+		"FloatingHelpMenuElement": undefined,
+		"FloatHelpContainerElement": undefined
 	};
 
 	/**
@@ -112,6 +117,7 @@ export class DashboardUI {
 			this.Variables.SidebarWidth = this.Variables.SidebarDefaultWidth;
 			this.set_css_variable("--dashboard-sidebar-width", `${this.Variables.SidebarWidth}px`);
 			// this._sidebarDraggerMouseup();
+			console.log(`Snapped sidebar back to default width ${this.Variables.SidebarDefaultWidth}px`);
 		} 
 		const uic_accountDialogue = [...this.UIComponents.values()].find((item) => item.Name === "account-dialogue");
 		if (uic_accountDialogue !== undefined && uic_accountDialogue.render !== undefined) {
@@ -166,6 +172,79 @@ export class DashboardUI {
 		// console.log([...this.UIComponents.values()]);
 	}
 
+
+
+	static setup_helpButton() {
+		this.Variables.FloatHelpContainerElement = document.querySelector(`#dashboard_help_help-container`);
+		this.Variables.FloatingHelpMenuElement = document.querySelector(`#dashboard_help_help-menu`);
+		this.Variables.FloatingHelpButtonElement = document.querySelector(`#dashboard_help_help-button`);
+		this.Variables.FloatingHelpButtonActive = false;
+
+		console.log(this.Variables);
+
+		this.Variables.FloatingHelpButtonElement.addEventListener("click", ()=>{
+			if (this.Variables.FloatingHelpButtonActive) {
+				// true -> false
+				this.Variables.FloatingHelpButtonActive = false;
+				this.Variables.FloatingHelpMenuElement.style.display = "none";
+
+			} else {
+				// false -> true
+				this.Variables.FloatingHelpButtonActive = true;
+				this.Variables.FloatingHelpMenuElement.style.display = "block";
+
+				const config = {
+					attributes: true,
+					childList: true,
+					subtree: true
+				};
+				const callback2 = (mutationsList, observer)=>{
+					for (let mutation of mutationsList) {
+						if (mutation.type === "attributes") {
+							console.log(`The ${mutation.attributeName} was modified`);
+							console.log(mutation, mutation.target.style);
+							console.log(window.getComputedStyle(mutation.target, ":focus-within"));
+						}
+					}
+				};
+				this.Variables.FloatingHelpButtonClickObserver = new MutationObserver(callback2);
+				this.Variables.FloatingHelpButtonClickObserver.observe(this.Variables.FloatHelpContainerElement, config);
+
+
+
+
+
+
+
+
+
+				const callback = (e)=>{
+					e.preventDefault();
+					// console.log(e.target, this.Variables.FloatHelpContainerElement);
+					// window.removeEventListener("click", callback);
+					// return 0;
+					const isDescendent = this.Variables.FloatHelpContainerElement.contains(e.target);
+					console.log(`${e.target.id} ${(isDescendent) ? ("is") : ("Is NOT")} a descendent of ${this.Variables.FloatHelpContainerElement.id}`);
+					
+					if ( !isDescendent ) {
+						e.preventDefault();
+						this.Variables.FloatingHelpButtonActive = false;
+						this.Variables.FloatingHelpMenuElement.style.display = "none";
+
+						window.removeEventListener("mousedown", callback);
+					}
+				};
+				this.Variables.FloatingHelpButtonClickObserver = window.addEventListener("mousedown", callback);
+			}
+		});
+
+		console.log(`Setup_helpButton done`);
+
+	}
+	static setup_helpMenu() {
+
+	}
+
 };
 
 
@@ -176,6 +255,7 @@ export default class Dashboard {
 	static onceInit() {
 		this.UI.setup_sidebar_dragger();
 		this.UI.setup_sidebar_uiComponents();
+		this.UI.setup_helpButton();
 
 		const alphabet = "abcdefghijklmnopqrstuvwxyz";
 		let k = 0;
@@ -185,6 +265,11 @@ export default class Dashboard {
 			k += 1;
 			if (k >= alphabet.length) k = 0;
 		}, 1000/2);
+
+
+		document.querySelector(`#dashboard_content>div[name="float-help"]>div[name="button-container"]`).addEventListener("mouseover", ()=>{
+			console.log(`hovering on button container`);
+		});
 	}
 };
 
