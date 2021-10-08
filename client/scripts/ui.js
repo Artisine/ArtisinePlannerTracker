@@ -255,19 +255,19 @@ export class UIComponent {
 		this.elementReference.style.left = `${this.AbsolutePosition.X}px`;
 		this.elementReference.style.top = `${this.AbsolutePosition.Y}px`;
 
-		this.elementReference.style.border = "1px solid red";
+		// this.elementReference.style.border = "1px solid red";
 		// this.elementReference.style.overflowX = "auto";
 		this.elementReference.style.overflowWrap = "anywhere";
 
 
 
-		console.log(
-			`UIComponent ${this.Name}\n`, 
-			`\tPosition: ${this.elementReference.style.left}, ${this.elementReference.style.top}\n`,
-			`\tSize: ${this.elementReference.style.width}, ${this.elementReference.style.height}\n`,
-			`\tParent: ${(this.Parent !== undefined) ? (this.Parent.Name) : ("None.")}`,
-			`\tChain of Parents: `, this.getAncestors(this).map((id) => UIComponent.GlobalMap.get(id).Name)
-		);
+		// console.log(
+		// 	`UIComponent ${this.Name}\n`, 
+		// 	`\tPosition: ${this.elementReference.style.left}, ${this.elementReference.style.top}\n`,
+		// 	`\tSize: ${this.elementReference.style.width}, ${this.elementReference.style.height}\n`,
+		// 	`\tParent: ${(this.Parent !== undefined) ? (this.Parent.Name) : ("None.")}`,
+		// 	`\tChain of Parents: `, this.getAncestors(this).map((id) => UIComponent.GlobalMap.get(id).Name)
+		// );
 
 
 		this.Children.forEach((uic) => {

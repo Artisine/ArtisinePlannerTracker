@@ -8,11 +8,18 @@
 	--dashboard-sidebar-tc: var(--notion-light-sidebar-tc);
 	--dashboard-sidebar-bg: var(--notion-light-sidebar-bg);
 
+	--dashboard-sidebar-button-hover: hsl(0, 0%, 75%);
+
 	--dashboard-content-bg: hsl(0, 0%, 100%);
 
+	--dashboard-sidebar-maxWidth: 500px;
+	--dashboard-sidebar-minWidth: 200px;
 	--dashboard-sidebar-width: 250px;
+	--dashboard-sidebar-dragger-width: 5px;
 	
 	--dashboard-sidebar-account-dialogue-height: 3rem;
+	--dashboard-sidebar-account-dialogue-height-px: calc(0px + var(--dashboard-sidebar-account-dialogue-height));
+	
 
 	--dashboard-sidebar-pagebutton-height: 1.25rem;
 	
@@ -49,12 +56,46 @@ div[name="dashboard_row_content"] {
 	}
 } */
 #dashboard_sidebar {
-	width: 100%;
+	/* width: 100%; */
+	width: var(--dashboard-sidebar-width);
 	height: 100vh;
 	background-color: var(--dashboard-sidebar-bg);
 
-	/* position: absolute; */
+	position: absolute;
+	padding-right: var(--dashboard-sidebar-dragger-width);
+	left: 0;
 }
+#dashboard_sidebar_dragger {
+	width: var(--dashboard-sidebar-dragger-width);
+	height: 100%;
+	background-color: rgba(0,0,0, 0);
+	position: absolute;
+	top: 0;
+	right: 0;
+	cursor: ew-resize;
+	z-index: 1;
+
+	transition: background 0.3s;
+}
+#dashboard_sidebar_dragger:hover , #dashboard_sidebar_dragger:focus-within {
+	background-color: var(--dashboard-sidebar-button-hover);
+}
+/* #dashboard_sidebar::after {
+	content: "";
+	background-color: lawngreen;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: var(--dashboard-sidebar-dragger-width);
+	height: 100%;
+	cursor: ew-resize;
+	z-index: 1;
+} */
+#dashboard_sidebar::after:hover , #dashboard_sidebar::after:focus-within {
+	content: "";
+	background-color: khaki;
+}
+
 #dashboard_sidebar > div[name="centered"] {
 	width: 100%;
 	height: 100%;
@@ -92,12 +133,15 @@ div[name="dashboard_row_content"] {
 	justify-content: left;
 	/* align-items: center; */
 
-	width: 100%;
+	width: var(--dashboard-sidebar-width);
 	/* position: relative; */
+}
+#dashboard_sidebar > div[name="account-dialogue-button"]:hover , #dashboard_sidebar > div[name="account-dialogue-button"]:focus-within {
+	background-color: hsl(5, 10%, 85%);
 }
 #dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-left"] {
 	padding: 2rem;
-	background-color: red;
+	/* background-color: red; */
 	height: 100%;
 	width: calc(100% - var(--dashboard-sidebar-account-dialogue-height));
 	/* display: flex;
@@ -110,7 +154,7 @@ div[name="dashboard_row_content"] {
 	position: relative;
 }
 #dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-left"] > div {
-	background-color: lightgreen;
+	/* background-color: lightgreen; */
 	/* position: absolute;
 	top: 50%;
 	transform: translateY(-50%); */
@@ -120,15 +164,43 @@ div[name="dashboard_row_content"] {
 }
 #dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-left"] > div[name="icon"] {
 	padding-left: 1rem;
-	width: 2rem;
-	height: 2rem;
-	background-color: wheat;
+	width: 1rem;
+	height: 1rem;
+	/* background-color: wheat; */
+	background-color: hsl(0, 0%, 70%);
+
+	border-radius: 2px;
+}
+#dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-left"] div[name="icon-text"] {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	/* background-color: red; */
+	position: relative;
+	padding: 0;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	border-radius: 2px;
+	font-weight: 650;
+	color: var(--dashboard-sidebar-bg);
+}
+
+#dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-left"] div[name="displayname"] {
+	width: 100%;
+	height: 100%;
+	font-weight: 550;
+	white-space: nowrap;
+	overflow-x: hidden;
+	text-overflow: ellipsis;
 }
 
 #dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-right"] {
 	width: var(--dashboard-sidebar-account-dialogue-height);
 	height: 100%;
-	background-color: lightcoral;
+	/* background-color: lightcoral; */
 	/* position: relative; */
 }
 
@@ -136,8 +208,42 @@ div[name="dashboard_row_content"] {
 #dashboard_sidebar > div[name="account-dialogue-button"] > div[name="container-right"] > div[name="toggle-button"] {
 	width: 100%;
 	height: 100%;
-	background-color: cyan;
+	/* background-color: cyan; */
 }
+
+#dashboard_sidebar > div[name="account-dialogue-button"] div[name="toggle-button-padded"] {
+	width: 60%;
+	height: 60%;
+
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+
+	position: relative;
+
+	color: var(--dashboard-sidebar-tc);
+}
+
+
+#dashboard_sidebar > div[name="account-dialogue-button"] div[name="toggle-button-padded"]:hover {
+	background-color: var(--dashboard-sidebar-button-hover);
+	border-radius: 2px;
+	cursor: pointer;
+	color: black;
+}
+
+#dashboard_sidebar > div[name="account-dialogue-button"] div[name="toggle-button-icon"] {
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 100%;
+	height: 100%;
+	/* color: green; */
+	position: relative;
+
+	color: inherit;
+}
+
 
 #dashboard_sidebar .pagebutton {
 	height: var(--dashboard-sidebar-pagebutton-height);
