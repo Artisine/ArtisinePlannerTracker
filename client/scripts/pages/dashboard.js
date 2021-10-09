@@ -13,7 +13,9 @@ import {
 export class DashboardUI {
 	static ElementReference = queryElement(`section[name="dashboard"]`);
 	static Debounces = {
-		"setup_dragger": false
+		"setup_dragger": false,
+		"Setup_HelpButton": false,
+		"Setup_HelpMenu": false
 	};
 	static Variables = {
 		"SidebarMinimumWidth": undefined,
@@ -175,47 +177,37 @@ export class DashboardUI {
 
 
 	static setup_helpButton() {
+		if (this.Debounces.Setup_HelpButton) return 1;
+		this.Debounces.Setup_HelpButton = true;
+
 		this.Variables.FloatHelpContainerElement = document.querySelector(`#dashboard_help_help-container`);
 		this.Variables.FloatingHelpMenuElement = document.querySelector(`#dashboard_help_help-menu`);
 		this.Variables.FloatingHelpButtonElement = document.querySelector(`#dashboard_help_help-button`);
 		this.Variables.FloatingHelpButtonActive = false;
 
-		console.log(this.Variables);
+		// console.log(this.Variables);
 
 		this.Variables.FloatingHelpButtonElement.addEventListener("click", ()=>{
 			if (this.Variables.FloatingHelpButtonActive) {
 				// true -> false
 				this.Variables.FloatingHelpButtonActive = false;
 				this.Variables.FloatingHelpMenuElement.style.display = "none";
+				this.Variables.FloatingHelpMenuElement.style.transition = "opacity 1s";
+				this.Variables.FloatingHelpMenuElement.style.opacity = "0";
+
+				try {
+					window.removeEventListener("mouseup", this.Variables.FloatingHelpButtonClickObserver);
+
+				} catch(e) {
+					console.log(`Thingy: ${e}`);
+				}
 
 			} else {
 				// false -> true
 				this.Variables.FloatingHelpButtonActive = true;
 				this.Variables.FloatingHelpMenuElement.style.display = "block";
-
-				const config = {
-					attributes: true,
-					childList: true,
-					subtree: true
-				};
-				const callback2 = (mutationsList, observer)=>{
-					for (let mutation of mutationsList) {
-						if (mutation.type === "attributes") {
-							console.log(`The ${mutation.attributeName} was modified`);
-							console.log(mutation, mutation.target.style);
-							console.log(window.getComputedStyle(mutation.target, ":focus-within"));
-						}
-					}
-				};
-				this.Variables.FloatingHelpButtonClickObserver = new MutationObserver(callback2);
-				this.Variables.FloatingHelpButtonClickObserver.observe(this.Variables.FloatHelpContainerElement, config);
-
-
-
-
-
-
-
+				this.Variables.FloatingHelpMenuElement.style.transition = "opacity 1s";
+				this.Variables.FloatingHelpMenuElement.style.opacity = "1";
 
 
 				const callback = (e)=>{
@@ -224,25 +216,33 @@ export class DashboardUI {
 					// window.removeEventListener("click", callback);
 					// return 0;
 					const isDescendent = this.Variables.FloatHelpContainerElement.contains(e.target);
-					console.log(`${e.target.id} ${(isDescendent) ? ("is") : ("Is NOT")} a descendent of ${this.Variables.FloatHelpContainerElement.id}`);
+					// console.log(e.target, ` ${(isDescendent) ? ("is") : ("Is NOT")} a descendent of ${this.Variables.FloatHelpContainerElement.id}`);
 					
 					if ( !isDescendent ) {
+						window.removeEventListener("mouseup", this.Variables.FloatingHelpButtonClickObserver);
 						e.preventDefault();
 						this.Variables.FloatingHelpButtonActive = false;
 						this.Variables.FloatingHelpMenuElement.style.display = "none";
+						this.Variables.FloatingHelpMenuElement.style.transition = "opacity 1s";
+						this.Variables.FloatingHelpMenuElement.style.opacity = "0";
 
-						window.removeEventListener("mousedown", callback);
+
+
 					}
 				};
-				this.Variables.FloatingHelpButtonClickObserver = window.addEventListener("mousedown", callback);
+				this.Variables.FloatingHelpButtonClickObserver = callback;
+				window.addEventListener("mouseup", this.Variables.FloatingHelpButtonClickObserver);
 			}
 		});
 
 		console.log(`Setup_helpButton done`);
-
+		this.setup_helpMenu();
 	}
 	static setup_helpMenu() {
+		if (this.Debounces.Setup_HelpMenu) return 1;
+		this.Debounces.Setup_HelpMenu = true;
 
+		console.log(`Help Menu setup procedure`);
 	}
 
 };
