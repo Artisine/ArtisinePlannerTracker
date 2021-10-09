@@ -10,7 +10,11 @@
 
 	--dashboard-sidebar-tc-darker: rgba(20, 20, 15, 0.8);
 
-	--dashboard-sidebar-button-hover: hsl(0, 0%, 70%);
+	--dashboard-sidebar-divider-color: hsl(0, 0%, 80%);
+	--dashboard-sidebar-button-hover: hsl(0, 0%, 80%);
+	--dashboard-sidebar-button-active: hsl(0, 0%, 60%);
+	--dashboard-sidebar-button-hover2: hsl(5, 10%, 85%);
+	--dashboard-sidebar-button-active2: hsl(0, 5%, 75%);
 
 	--dashboard-content-bg: hsl(0, 0%, 100%);
 
@@ -261,6 +265,54 @@ div[name="dashboard_row_content"] {
 }
 
 
+
+#dashboard_sidebar > div[name="utility-buttons"] {
+	/* background-color: red; */
+}
+#dashboard_sidebar > div[name="utility-buttons"] li.divider {
+	width: 100%;
+	height: 1px;
+	/* margin-top: 1rem !important; */
+	/* margin-bottom: 1rem !important; */
+	margin: 0.25rem 0 !important;
+	background-color: var(--dashboard-sidebar-divider-color);
+}
+#dashboard_sidebar > div[name="utility-buttons"] li.divider.not-shown {
+	opacity: 0;
+}
+#dashboard_sidebar > div[name="utility-buttons"] > li.utility-button {
+	width: 100%;
+	height: 2rem;
+	padding: 0.15rem 1rem !important;
+	background-color: var(--dashboard-sidebar-bg);
+	cursor: pointer;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	/* vertical-align: sub; */
+	font-weight: 600;
+	color: var(--dashboard-sidebar-tc-darker);
+}
+#dashboard_sidebar > div[name="utility-buttons"] > li.utility-button:hover {
+	background-color: var(--dashboard-sidebar-button-hover2);
+}
+#dashboard_sidebar > div[name="utility-buttons"] > li.utility-button:hover:active {
+	background-color: var(--dashboard-sidebar-button-active2);
+}
+#dashboard_sidebar > div[name="utility-buttons"] > li.utility-button *[name="icon"] {
+	padding-right: 1rem;
+	/* width: 50%; */
+	/* height: 50%; */
+	/* width: auto; */
+}
+#dashboard_sidebar > div[name="utility-buttons"] > li.utility-button *[name="icon"] * {
+	width: 100%;
+	height: 100%;
+}
+#dashboard_sidebar > div[name="utility-buttons"] > li.utility-button *[name="text"] {
+	padding-left: 0.5rem !important;
+}
+
 #dashboard_sidebar .pagebutton {
 	height: var(--dashboard-sidebar-pagebutton-height);
 }
@@ -445,6 +497,12 @@ div[name="dashboard_row_content"] {
 #dashboard_content div[name="help-menu"] > ul[name="help-menu-list"] li.sublist > ul *.text-muted {
 	font-size: 0.75rem !important;
 	height: max-content !important;
+}
+#dashboard_content div[name="help-menu"] > ul[name="help-menu-list"] li.sublist > ul *.text-muted * {
+	font-size: inherit !important;
+	height: 100% !important;
+	line-height: inherit !important;
+	vertical-align: top !important;
 }
 
 #dashboard_content div[name="help-menu"] > ul[name="help-menu-list"] li.sublist > ul * span {

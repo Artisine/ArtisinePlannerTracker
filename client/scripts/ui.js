@@ -54,8 +54,38 @@ export class Vector2 {
 	constructor(x, y) {
 		this.X = x;
 		this.Y = y;
+		this.Magnitude = undefined;
+	}
+	Magnitude() {
+		this.Magnitude = Math.sqrt(this.x * this.x + this.y * this.y);
+		return this.Magnitude;
+	}
+	add(vec2) {
+		if (vec2 instanceof Vector2) {
+			return new Vector2(this.X + vec2.X, this.Y + vec2.Y);
+		}
+	}
+	sub(vec2) {
+		if (vec2 instanceof Vector2) {
+			return new Vector2(this.X - vec2.X, this.Y - vec2.Y);
+		}
+	}
+	mul(thing, mode="dot") {
+		if (thing instanceof Vector2) {
+			if (mode === "dot") {
+				return this.X * thing.X + this.Y * thing.Y;
+			} else if (mode === "cross") {
+				// mathematical hack
+				//returns only the Z-axis of the resulting 3D Vector
+				return this.X * thing.Y - this.Y * thing.X;
+			}
+		} else if (typeof thing === "number") {
+			return new Vector2(this.X * thing, this.Y * thing);
+		}
 	}
 };
+
+
 export class UIComponent {
 	static _Count = 1;
 
@@ -72,6 +102,18 @@ export class UIComponent {
 			"YY": 3
 		}
 	};
+
+	static ApplyProperties(instanceToApplyOn, config) {
+		for (let key in config) {
+			if (key in instanceToApplyOn) {
+				instanceToApplyOn[key] = config[key];
+				console.log(`${instanceToApplyOn.Name} changed ${key} to ${config[key]}`);
+			}
+		}
+	}
+
+
+
 
 	/**
 	 * 

@@ -126,6 +126,11 @@ export class DashboardUI {
 			uic_accountDialogue.Size = new UDim2(0, this.Variables.SidebarWidth, 0, parseFloat( this.get_css_variable("--dashboard-sidebar-account-dialogue-height")) * parseFloat(this.get_css_variable("font-size")) );
 			uic_accountDialogue.render();
 		}
+		const uic_utilityButtons = [...this.UIComponents.values()].find((item) => item.Name === "utility-buttons");
+		if (uic_utilityButtons !== undefined && uic_utilityButtons.render !== undefined) {
+			uic_utilityButtons.Size = new UDim2(0, this.Variables.SidebarWidth, 0, uic_utilityButtons.Size.Y.Offset);
+			uic_utilityButtons.render();
+		}
 		
 	}
 
@@ -165,13 +170,26 @@ export class DashboardUI {
 		displayName.AnchorPoint = new Vector2(1, 0.5);
 		displayName.setParent(containerLeft);
 
-		[accountDialogue, containerLeft, containerRight, icon, displayName].map((uic) => [uic.id, uic]).forEach((arr) => {
-			this.UIComponents.set(arr[0], arr[1]);
-			// console.log(`${arr[0]}, ${arr[1]}, `, this.UIComponents.get(arr[0]));
-		});
+		
 
 		accountDialogue.init();
 		// console.log([...this.UIComponents.values()]);
+
+
+		const utilityButtons = new UIComponent(queryElement(`#dashboard_sidebar div[name="utility-buttons"]`), "utility-buttons");
+		UIComponent.ApplyProperties(utilityButtons, {
+			Position: new UDim2(0, 0, 0, (parseFloat( this.get_css_variable("--dashboard-sidebar-account-dialogue-height")) + 1) * parseFloat(this.get_css_variable("font-size")) ),
+			SizeConstraint: UIComponent.Enum.SizeConstraint.XY,
+			Size: new UDim2(0, this.Variables.SidebarWidth, 0, 100),
+			AnchorPoint: new Vector2(0, 0)
+		});
+		// const 
+		utilityButtons.init();
+
+		[accountDialogue, containerLeft, containerRight, icon, displayName, utilityButtons].map((uic) => [uic.id, uic]).forEach((arr) => {
+			this.UIComponents.set(arr[0], arr[1]);
+			// console.log(`${arr[0]}, ${arr[1]}, `, this.UIComponents.get(arr[0]));
+		});
 	}
 
 
@@ -241,6 +259,10 @@ export class DashboardUI {
 	static setup_helpMenu() {
 		if (this.Debounces.Setup_HelpMenu) return 1;
 		this.Debounces.Setup_HelpMenu = true;
+
+		const isMobile = ('ontouchstart' in document.documentElement && navigator.userAgent.match(/Mobi/));
+		document.querySelector(`#dashboard_help_info_device-type`).innerHTML = (isMobile) ? ("Mobile") : ("Desktop");
+		
 
 		console.log(`Help Menu setup procedure`);
 	}
