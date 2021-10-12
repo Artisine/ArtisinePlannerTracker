@@ -27,6 +27,8 @@
 	--dashboard-sidebar-account-dialogue-height: 3rem;
 	--dashboard-sidebar-account-dialogue-height-px: calc(0px + var(--dashboard-sidebar-account-dialogue-height));
 	
+	--dashboard-sidebar-utilityButton-height: 2rem;
+	--dashboard-sidebar-divider-height: 0.25rem!important;
 
 	--dashboard-sidebar-pagebutton-height: 1.25rem;
 	
@@ -278,7 +280,7 @@ div[name="dashboard_row_content"] {
 	height: 1px;
 	/* margin-top: 1rem !important; */
 	/* margin-bottom: 1rem !important; */
-	margin: 0.25rem 0 !important;
+	margin: var(--dashboard-sidebar-divider-height) 0 !important;
 	background-color: var(--dashboard-sidebar-divider-color);
 }
 #dashboard_sidebar > div[name="utility-buttons"] li.divider.not-shown {
@@ -286,7 +288,7 @@ div[name="dashboard_row_content"] {
 }
 #dashboard_sidebar > div[name="utility-buttons"] > li.utility-button {
 	width: 100%;
-	height: 2rem;
+	height: var(--dashboard-sidebar-utilityButton-height);
 	padding: 0.15rem 1rem !important;
 	background-color: var(--dashboard-sidebar-bg);
 	cursor: pointer;

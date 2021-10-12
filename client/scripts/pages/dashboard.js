@@ -180,11 +180,39 @@ export class DashboardUI {
 		UIComponent.ApplyProperties(utilityButtons, {
 			Position: new UDim2(0, 0, 0, (parseFloat( this.get_css_variable("--dashboard-sidebar-account-dialogue-height")) + 1) * parseFloat(this.get_css_variable("font-size")) ),
 			SizeConstraint: UIComponent.Enum.SizeConstraint.XY,
+			Size: new UDim2(0, this.Variables.SidebarWidth, 0, 100 ),
+			AnchorPoint: new Vector2(0, 0)
+		});
+		(()=>{
+			const buttons = [...utilityButtons.elementReference.getElementsByClassName("utility-button")];
+			const dividers = [...utilityButtons.elementReference.getElementsByClassName("divider")]; 
+			const heightButtons = buttons.length * parseFloat(this.get_css_variable("--dashboard-sidebar-utilityButton-height")) * parseFloat(this.get_css_variable("font-size"));
+			const heightDividers = dividers.length * parseFloat(this.get_css_variable("--dashboard-sidebar-divider-height")) * parseFloat(this.get_css_variable("font-size"));
+			const heightTotal = Math.ceil( heightButtons + heightDividers );
+			UIComponent.ApplyProperties(utilityButtons, {
+				Size: new UDim2(0, this.Variables.SidebarWidth, 0, heightTotal)
+			});
+			utilityButtons.render();
+			// console.log(utilityButtons);
+		})();
+		// const 
+		utilityButtons.init();
+
+
+
+		const pageButtons = new UIComponent(queryElement(`#dashboard_sidebar div[name="page-buttons"]`), "page-buttons");
+		UIComponent.ApplyProperties(pageButtons, {
+			Position: new UDim2(
+				0, 0, 0, 
+				parseFloat(this.get_css_variable("font-size"))*2 + utilityButtons.Size.Y.Offset + utilityButtons.Position.Y.Offset
+			),
+			SizeConstraint: UIComponent.Enum.SizeConstraint.XY,
 			Size: new UDim2(0, this.Variables.SidebarWidth, 0, 100),
 			AnchorPoint: new Vector2(0, 0)
 		});
-		// const 
-		utilityButtons.init();
+		pageButtons.init();
+
+
 
 		[accountDialogue, containerLeft, containerRight, icon, displayName, utilityButtons].map((uic) => [uic.id, uic]).forEach((arr) => {
 			this.UIComponents.set(arr[0], arr[1]);
