@@ -103,11 +103,13 @@ export class UIComponent {
 		}
 	};
 
+	static VerboseLogging = false;
+
 	static ApplyProperties(instanceToApplyOn, config) {
 		for (let key in config) {
 			if (key in instanceToApplyOn) {
 				instanceToApplyOn[key] = config[key];
-				console.log(`${instanceToApplyOn.Name} changed ${key} to ${config[key]}`);
+				if (this.VerboseLogging) console.log(`${instanceToApplyOn.Name} changed ${key} to ${config[key]}`);
 			}
 		}
 	}
@@ -337,7 +339,7 @@ export class UIComponent {
 	addChild(child) {
 		child.Parent = this;
 		this.Children.set(child.id, child);
-		console.log(`Parent (this): ${this.Name}\n\tChild: ${child.Name}`);
+		if (this.VerboseLogging) console.log(`Parent (this): ${this.Name}\n\tChild: ${child.Name}`);
 	}
 
 	/**
