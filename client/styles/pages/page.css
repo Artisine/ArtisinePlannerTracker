@@ -1,0 +1,34 @@
+
+
+
+.page {
+	padding: 1rem 6rem !important;
+}
+
+.contentblock {}
+.contentblock.selected {
+	background-color: rgba(38, 166, 252, 0.822);
+}
+
+.textblock {
+	padding: 1rem !important;
+	border: 0.25px solid grey;
+
+}
+.textblock:hover {
+	/* border: 1px solid blue; */
+	/* border-left: 4px solid blue;
+
+	background-color: grey;
+
+	transition: 0.3s background-color; */
+}
+.textblock:active, .textblock:target {
+	/* border: 1px solid red;
+	border-left: 8px solid red; */
+}
+.textblock-contextmenu {
+	border: 0.2rem solid pink !important;
+}
+
+

@@ -58,20 +58,43 @@ showElement(Dashboard.ElementReference);
 
 
 
-const text_hw = Utility.run_SHA256_onString("Hello World!");
-console.log(`Encryped SHA-256 of \"Hello World!\" = ${await text_hw }`);
 
-let k = 0;
-let abc = setInterval(async ()=>{
 
-	const sf = await Utility.CreateSnowflake(new Date(), "");
-	console.log(`Thing = ${sf}`);
+function test_pageInput() {
 
-	k += 1;
-	if (k > 10) {
-		clearInterval(abc);
-	}
-}, 3000);
+	window.addEventListener("keydown", (evt)=>{
+		console.log(evt);
+	});
+
+	return 0;
+}
+
+// test_pageInput();
+
+
+// const text_hw = Utility.run_SHA256_onString("Hello World!");
+// console.log(`Encryped SHA-256 of \"Hello World!\" = ${await text_hw }`);
+
+// let k = 0;
+// let abc = setInterval(async ()=>{
+
+// 	const sf = await Utility.CreateSnowflake(new Date(), "");
+// 	console.log(`Thing = ${sf}`);
+
+// 	k += 1;
+// 	if (k > 10) {
+// 		clearInterval(abc);
+// 	}
+// }, 3000);
+
+
+// (()=>{
+// 	const abc = [1,2,3,4,5];
+// 	const cba = [5,4,3,2,1];
+// 	console.log(Utility.BubbleSort(abc), Utility.BubbleSort(cba));
+// })();
+
+
 
 
 LoginScreen.onceInit();

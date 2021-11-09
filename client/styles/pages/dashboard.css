@@ -556,7 +556,8 @@ div[name="dashboard_row_content"] {
 
 
 #dashboard-content_pagespace {
-	background-color: red;
+	/* background-color: red; */
+	background-color: white;
 
 	position: absolute;
 	z-index: 2;
