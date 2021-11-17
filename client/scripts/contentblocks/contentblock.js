@@ -1,5 +1,4 @@
 
-import TimeService from "../timeservice.js";
 import * as Utility from "../utility.js";
 
 
@@ -28,8 +27,8 @@ class ContentblockMarkup extends HTMLDivElement {
 			}
 		};
 
-			this.init();
-		}
+		this.init();
+	}
 
 	init() {
 		this.createMarkup();
@@ -71,6 +70,18 @@ class ContentblockMarkup extends HTMLDivElement {
 		}
 	}
 
+
+	custom_focus() {
+
+		this.classList.add("selected");
+		
+	}
+	custom_unfocus() {
+
+		this.classList.remove("selected");
+
+	}
+
 };
 
 class TextBlockMarkup extends HTMLDivElement {
@@ -107,6 +118,7 @@ class TextBlockMarkup extends HTMLDivElement {
 
 		// div.style.height = "max-content";
 		div.textContent = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
+		div.setAttribute("contenteditable", "true");
 
 		this.appendChild(div);
 		console.log(`Should have appened ${div} to ${this}`);
@@ -131,8 +143,17 @@ class TextBlockMarkup extends HTMLDivElement {
 
 export default class Contentblock {
 
+	/**
+	 * @type {Map<string, Contentblock>} GlobalMap - The global map of Contentblocks!
+	 */
+	static GlobalMap = new Map();
 
-	constructor() {
+	static AddToGlobalMap(id, obj) {
+		Contentblock.GlobalMap.set(id, obj);
+		console.info(`${id} set ${obj} in ContentBlock GlobalMap.`);
+	}
+
+	constructor(dateObject, name) {
 		this.ClassName = "Contentblock";
 		this.Name = "Contentblock";
 		this.Id = undefined;
@@ -145,21 +166,16 @@ export default class Contentblock {
 		this.Markup = undefined;
 
 
-		this.Id_Promise = Utility.CreateSnowflake(new Date(), "Contentblock");
+		this.Id_Promise = Utility.CreateSnowflake(dateObject, String(name));
 		this.Id_Promise.then((generatedSnowflake) => {
 			this.Id = generatedSnowflake;
 			// console.log(`Contentblock ${this.id} is now available`);
 			this.selfLog(`id has been set.`);
+			// Contentblock.GlobalMap.set(this.Id, this);
+			Contentblock.AddToGlobalMap(this.Id, this);
 		}).catch(reason => console.error);
 		
 
-
-		// Promise.all([
-		// 	this.Id_Promise
-		// ]).then(()=>{ 
-		// 	this.init();
-
-		// }).catch((reason)=>console.error(reason));
 	}
 
 	/**
@@ -167,7 +183,7 @@ export default class Contentblock {
 	 * @param  {...any} message 
 	 */
 	selfLog(...message) {
-		console.log(`%c${this.ClassName} %c"${this.Name}" %c#%c${this.Id} %c: ${message.join("\n")}`,
+		console.trace(`${new Date(Date.now()).toUTCString()}\n%c${this.ClassName} %c"${this.Name}" %c#%c${this.Id} %c: ${message.join("\n")}`,
 		"color:navy", "color:cornflowerblue", "color:black", "color:grey", "color:black");
 	}
 
@@ -199,6 +215,23 @@ export default class Contentblock {
 		console.log("Setup click handler");
 
 		return this.Element;
+	}
+
+
+	/**
+	 * 
+	 * @param {HTMLElement} parent 
+	 */
+	setParent(parent) {
+		parent.appendChild(this.Element);
+	}
+
+	focus() {
+		this.Element.custom_focus();
+		this.Element.click();
+	}
+	unfocus() {
+		this.Element.custom_unfocus();
 	}
 
 
@@ -289,18 +322,45 @@ export default class Contentblock {
 };
 
 export class TextBlock extends Contentblock {
+	static CreateNew() {
+		const newTextBlock = new TextBlock();
+		newTextBlock.render();
+		// ^ skipped the .init() - honestly forgot about init,
+		// but in this situation calling .init() can returning a promise
+		// is inconvenient, hence skip promise and go synchronous as it's faster
+		const pagespace = document.querySelector("#dashboard-content_pagespace");
+		newTextBlock.setParent(pagespace);
+		// newTextBlock.focus();
+
+		newTextBlock.setTextAndDisplayText(`I am ${newTextBlock.ClassName} ${newTextBlock.Name} number ${Contentblock.GlobalMap.size}`);
+
+		return newTextBlock;
+	}
 	constructor() {
-		super();
+		super(new Date(), "TextBlock");
+		this.ClassName = "TextBlock";
+		this.Name = "TextBlock";
 
 		this.Text = ``; // the original text
 		this.EscapedText = ``; // original text modified to escape line-breaks, tabs, etc.
 
-		this.Id_Promise = Utility.CreateSnowflake(new Date(), "TextBlock");
-		this.Id_Promise.then((generatedSnowflake) => {
-			this.Id = generatedSnowflake;
-			// console.log(`Contentblock ${this.id} is now available`);
-			this.selfLog(`id has been set.`);
-		}).catch(reason => console.error);
+		// this.Id_Promise = undefined;
+		// this.Id_Promise = Utility.CreateSnowflake(new Date(), "TextBlock");
+		// this.Id_Promise.then((generatedSnowflake) => {
+		// 	this.Id = generatedSnowflake;
+		// 	// console.log(`Contentblock ${this.id} is now available`);
+		// 	this.selfLog(`id has been set.`);
+
+		// 	this.setTextAndDisplayText(`This is TextBlock ${Contentblock.GlobalMap.size}. ${"Ipsum Lorem ".repeat(Contentblock.GlobalMap.size)}.`);
+
+		// 	// Contentblock.GlobalMap.set(this.Id, this);
+		// 	Contentblock.AddToGlobalMap(this.Id, this);
+
+
+		// }).catch(reason => console.error);
+
+		this.CursorBlinkEventHook = undefined;
+		this.CursorBlinkDuration = 500; // in ms.
 	}
 
 	render() {
@@ -308,16 +368,21 @@ export class TextBlock extends Contentblock {
 		div.setAttribute("is", "textblock-markup");
 		this.selfLog(`rendered markup [tb]`);
 		this.Element = div;
-		this.Element.addEventListener("contextmenu", (evt)=>{
-			evt.preventDefault();
-			return 0;
+		// this.Element.addEventListener("contextmenu", (evt)=>{
+		// 	evt.preventDefault();
+		// 	return 0;
+		// });
+		// this.Element.addEventListener("mousedown", (evt)=>{
+		// 	evt.preventDefault();
+		// 	// console.log(evt);
+		// 	this.onclick(evt);
+		// });
+		// console.log("Setup click handler");
+		this.Element.addEventListener("input", (evt)=>{
+			console.log(evt);
+			this.hook_enterKeyPressed(evt);
 		});
-		this.Element.addEventListener("mousedown", (evt)=>{
-			evt.preventDefault();
-			// console.log(evt);
-			this.onclick(evt);
-		});
-		console.log("Setup click handler");
+		// this.Element.click();
 		return this.Element;
 	}
 
@@ -330,14 +395,38 @@ export class TextBlock extends Contentblock {
 		this.Element.TextContent = this.Text;
 		this.Element.EscapedTextContent = this.EscapedText;
 
-		this.Element.querySelector(`div[name="text-holder"]`).textContent = this.Element.TextContent;
-
+		// this.setDisplayText(this.Text);
 
 		// const regex = new RegExp(``);
 		// this.EscapedText = this.Text.replace();
 	}
+	/**
+	 * 
+	 * @param {string} text 
+	 */
+	setDisplayText(text) {
+		this.Element.querySelector(`div[name="text-holder"]`).textContent = text;
+
+	}
+
+	setTextAndDisplayText(text) {
+		this.setText(text);
+		this.setDisplayText(text);
+	}
 
 
+	/**
+	 * 
+	 * @param {boolean} shouldBlink 
+	 */
+	toggle_cursor_blink(shouldBlink) {
+		if (shouldBlink) {
+			this.CursorBlinkEventHook = setInterval(()=>{
+				
+			}, this.CursorBlinkDuration);
+			
+		}
+	}
 	select() {
 
 		this.Element.classList.add("selected");
@@ -346,8 +435,42 @@ export class TextBlock extends Contentblock {
 
 		this.Element.classList.remove("selected");
 	}
-	edit(evt) {
-		console.log(evt);
+
+	hook_enterKeyPressed(evt) {
+		// evt.preventDefault();
+
+		if (evt.inputType === "insertText") {
+			
+			this.edit(evt.data);
+			
+		} else if (evt.inputType === "insertParagraph") {
+			
+			// when pressing Enter key
+
+			/**
+			 * @type {HTMLElement} srcElement
+			 */
+			const srcElement = evt.srcElement;
+			// this will be the TextBlock-Element.
+			const lastChild = [... srcElement.children][srcElement.children.length - 1];
+			if (lastChild) {
+				console.log(`Last child, id = ${lastChild.id} ${lastChild.Id}`);
+				TextBlock.CreateNew();
+				console.log(`Pop this new child into its own TextBlock`);
+			}
+			console.log(lastChild);
+
+			return 1;
+		}
+	}
+	edit(thing) {
+		console.log(thing);
+
+		const theKey = (thing instanceof KeyboardEvent) ? (thing.key) : ((typeof thing === "string") ? (thing) : (undefined));
+		if (theKey === undefined) {
+			return 1;
+		}
+
 		const combinedKeySet = [
 			...Contentblock.KeyboardKeys_Editing,
 			...Contentblock.KeyboardKeys_Modifiers,
@@ -355,16 +478,16 @@ export class TextBlock extends Contentblock {
 			...Contentblock.KeyboardKeys_UI,
 			...Contentblock.KeyboardKeys_Whitespaces
 		];
-		if (evt.key === "Backspace") {
+		if (theKey === "Backspace") {
 			this.setText(`${this.Text.substr(0, this.Text.length-1)}`);
-		} else if (evt.key === " " || evt.key === "Spacebar") {
+		} else if (theKey === " " || theKey === "Spacebar") {
 			this.setText(`${this.Text} `);
-		} else if (evt.key === "Tab") {
+		} else if (theKey === "Tab") {
 			this.setText(`${this.Text}\t`);
-		} else if (combinedKeySet.includes(evt.key)) {
+		} else if (combinedKeySet.includes(theKey)) {
 			return 1;
 		} else {
-			this.setText(`${this.Text}${evt.key}`);
+			this.setText(`${this.Text}${theKey}`);
 		}
 
 		return 0;

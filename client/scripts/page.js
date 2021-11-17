@@ -268,8 +268,9 @@ bye.`
 		const jack = new TextBlock();
 		jack.init().then(rendered=>{
 			// const rendered = thing.render();
-			document.querySelector("#dashboard-content_pagespace").appendChild(rendered);
-			jack.setText(`To be, or not to be. That, is the question. Were it not for the hooded man who goes nigh on the River Styx, one would seek to venture and explore the underworld. Alas, the gates of Hell are guarded by an ephemeral protector, a three-headed canine with parched appetite for Human.`);
+			// document.querySelector("#dashboard-content_pagespace").appendChild(rendered);
+			rendered.Contentblock.setParent(document.querySelector("#dashboard-content_pagespace"));
+			jack.setTextAndDisplayText(`To be, or not to be. That, is the question. Were it not for the hooded man who goes nigh on the River Styx, one would seek to venture and explore the underworld. Alas, the gates of Hell are guarded by an ephemeral protector, a three-headed canine with parched appetite for Human.`);
 			console.log(`Appended the second render to pagespace`);
 		});
 

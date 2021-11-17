@@ -1,30 +1,6 @@
 
-
-export class BNF_Parser {
-
-	static ProductionRules = new Set();
-
-
-	static CheckIfDatagramIsValid(datagram) {
-		const procedureDef = {
-			"procedure": {
-				"identifier": {
-					"EXIT": "EXIT",
-					"parameters": {
-						"lbracket": "(",
-						"parameter": [["parameter"], ["parameter", ";"]],
-						"rbracket": ")",
-						"EXIT": "EXIT"
-					}
-				}
-			}
-		};
-		// this is not going to be efficient for larger production rule units.
-	}
-	static DefineRule(name, flowDatagram) {
-		this.ProductionRules.add(name, flowDatagram);
-	}
-};
+export const alphabet = "abcdefghijklmnopqrstuvwxyz";
+export const numbers = "0123456789";
 
 
 
@@ -34,6 +10,13 @@ export async function run_SHA256_onString(str) {
 	return Array.prototype.map.call(new Uint8Array(buffer), (x)=>(("00"+x.toString(16)).slice(-2))).join("");
 }
 
+export async function RandomAlphabetString(numberOfChars = 8) {
+	let output = "";
+	for (let i=0; i<numberOfChars; i+=1) {
+		output += alphabet[Math.floor(Math.random() * alphabet.length)];
+	}
+	return Promise.resolve(output);
+}
 
 /**
  * 
@@ -42,11 +25,13 @@ export async function run_SHA256_onString(str) {
  * @returns string;
  */
 export async function CreateSnowflake(dateTime, accountName) {
-	const dateTimeUTCMs = dateTime.getUTCMilliseconds();
-	const sha256_time = await run_SHA256_onString(`${dateTimeUTCMs}`);
-	const sha256_accountName = await run_SHA256_onString(`${accountName}`);
-	const output = sha256_time + sha256_accountName;
+	// const dateTimeUTCMs = dateTime.getUTCMilliseconds();
+	// const sha256_time = await run_SHA256_onString(`${dateTimeUTCMs}`);
+	// const sha256_accountName = await run_SHA256_onString(`${accountName}`);
+	// const output = sha256_time + sha256_accountName;
 	// const output = await run_SHA256_onString(sha256_time + sha256_accountName);
+
+	const output = await RandomAlphabetString(8);
 	
 	return `${output}`;
 }

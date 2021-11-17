@@ -51,6 +51,7 @@ import Dashboard from "./pages/dashboard.js";
 import { DatabaseService, NetworkingService } from "./dbnet.js";
 
 import PageService from "./page.js";
+import Contentblock, { TextBlock } from "./contentblocks/contentblock.js";
 
 
 hideElement(LoginScreen.ElementReference);
@@ -94,12 +95,23 @@ function test_pageInput() {
 // 	console.log(Utility.BubbleSort(abc), Utility.BubbleSort(cba));
 // })();
 
+const bob = TextBlock.CreateNew();
+console.log(bob);
+bob.Name = "Bob";
+// bob.setTextAndDisplayText(`Hi, I'm bob.`);
+bob.setTextAndDisplayText(`I am ${bob.ClassName} "${bob.Name}" number ${Contentblock.GlobalMap.size}`);
+
+
+
+
+
+
 
 
 
 LoginScreen.onceInit();
-DatabaseService.once_init();
-PageService.once_init();
+// DatabaseService.once_init();
+// PageService.once_init();
 
 console.info(`%c[MAIN client.js] %cLocked and loaded!`, "color: purple", "color: darkgreen");
 // end of file
