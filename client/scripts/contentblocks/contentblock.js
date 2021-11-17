@@ -125,6 +125,19 @@ class TextBlockMarkup extends HTMLDivElement {
 	}
 
 
+	custom_focus() {
+		console.trace();
+		this.classList.add("selected");
+		this.querySelector(`div[name="text-holder"]`).click();
+		
+	}
+	custom_unfocus() {
+
+		this.classList.remove("selected");
+		this.querySelector(`div[name="text-holder"]`).blur();
+		document.body.click();
+
+	}
 
 };
 
@@ -165,6 +178,13 @@ export default class Contentblock {
 
 		this.Markup = undefined;
 
+		/**
+		 * @type {number} Position - The numeric integer position-index of a Content Block
+		 * within the Page. Goes up in integer increments of 1.
+		 * If inserting Content Blocks before or after others, be sure to decrement/increment appropriately.
+		 */
+		this.Position = Infinity;
+
 
 		this.Id_Promise = Utility.CreateSnowflake(dateObject, String(name));
 		this.Id_Promise.then((generatedSnowflake) => {
@@ -199,7 +219,12 @@ export default class Contentblock {
 
 	}
 
-
+	setup_hooks() {
+		this.Element.addEventListener("click", (evt)=>{
+			console.log("Hello! This is the test message!");
+			this.focus();
+		});
+	}
 
 	render() {
 		// const div = document.createElement("div");
@@ -209,9 +234,7 @@ export default class Contentblock {
 
 		this.Element = div;
 
-		this.Element.addEventListener("click", (evt)=>{
-			console.log("Hello! This is the test message!");
-		});
+		this.setup_hooks();
 		console.log("Setup click handler");
 
 		return this.Element;
@@ -227,10 +250,21 @@ export default class Contentblock {
 	}
 
 	focus() {
+		Contentblock.PreviousBlock = Contentblock.ActiveBlock;
+		Contentblock.ActiveBlock = this;
+		if (Contentblock.PreviousBlock !== undefined && Contentblock.PreviousBlock.Id !== Contentblock.ActiveBlock.Id) {
+			Contentblock.PreviousBlock.Element.custom_unfocus();
+		}
+		Contentblock.PreviousElement = Contentblock.ActiveElement;
+		Contentblock.ActiveElement = this.Element;
 		this.Element.custom_focus();
-		this.Element.click();
+		// this.Element.click();
 	}
 	unfocus() {
+		Contentblock.PreviousBlock = Contentblock.ActiveBlock;
+		Contentblock.ActiveBlock = undefined;
+		Contentblock.PreviousElement = Contentblock.ActiveElement;
+		Contentblock.ActiveElement = undefined;
 		this.Element.custom_unfocus();
 	}
 
@@ -239,6 +273,16 @@ export default class Contentblock {
 	 * @type {Map<string, Contentblock>} SelectedBlocks - A map of Blocks which the User has selected.
 	 */
 	static SelectedBlocks = new Map();
+
+	/**
+	 * @type {Contentblock} ActiveBlock
+	 */
+	static ActiveBlock = undefined;
+
+	/**
+	 * @type {Contentblock} PreviousBlock
+	 */
+	static PreviousBlock = undefined;
 
 	/**
 	 * @type {HTMLElement} ActiveElement - The current Element that is selected by User to edit.
@@ -333,6 +377,7 @@ export class TextBlock extends Contentblock {
 		// newTextBlock.focus();
 
 		newTextBlock.setTextAndDisplayText(`I am ${newTextBlock.ClassName} ${newTextBlock.Name} number ${Contentblock.GlobalMap.size}`);
+		newTextBlock.focus();
 
 		return newTextBlock;
 	}
@@ -363,6 +408,16 @@ export class TextBlock extends Contentblock {
 		this.CursorBlinkDuration = 500; // in ms.
 	}
 
+	setup_hooks() {
+		this.Element.addEventListener("click", (evt)=>{
+			console.log("Hello! This is the test message!");
+			this.focus();
+		});
+		this.Element.addEventListener("input", (evt)=>{
+			console.log(evt);
+			this.hook_enterKeyPressed(evt);
+		});
+	}
 	render() {
 		const div = new TextBlockMarkup(this);
 		div.setAttribute("is", "textblock-markup");
@@ -378,11 +433,11 @@ export class TextBlock extends Contentblock {
 		// 	this.onclick(evt);
 		// });
 		// console.log("Setup click handler");
-		this.Element.addEventListener("input", (evt)=>{
-			console.log(evt);
-			this.hook_enterKeyPressed(evt);
-		});
+		
 		// this.Element.click();
+
+		this.setup_hooks();
+
 		return this.Element;
 	}
 
@@ -414,19 +469,8 @@ export class TextBlock extends Contentblock {
 		this.setDisplayText(text);
 	}
 
+	
 
-	/**
-	 * 
-	 * @param {boolean} shouldBlink 
-	 */
-	toggle_cursor_blink(shouldBlink) {
-		if (shouldBlink) {
-			this.CursorBlinkEventHook = setInterval(()=>{
-				
-			}, this.CursorBlinkDuration);
-			
-		}
-	}
 	select() {
 
 		this.Element.classList.add("selected");
@@ -455,9 +499,13 @@ export class TextBlock extends Contentblock {
 			 */
 			const srcElement = evt.srcElement;
 			// this will be the TextBlock-Element.
+
+			/**
+			 * @type {HTMLElement} lastChild
+			 */
 			const lastChild = [... srcElement.children][srcElement.children.length - 1];
 			if (lastChild) {
-				console.log(`Last child, id = ${lastChild.id} ${lastChild.Id}`);
+				console.log(`Last child, id = ${lastChild.id} ${lastChild.Id}`, lastChild, lastChild.parentNode);
 				TextBlock.CreateNew();
 				console.log(`Pop this new child into its own TextBlock`);
 
@@ -465,6 +513,10 @@ export class TextBlock extends Contentblock {
 				// after we create a new textblock, destroy the new-line
 				// to make it appear like we made a new textblock in the first place
 				// sneaky. I know.
+				const brElement = [...lastChild.children].find((item) => item instanceof HTMLBRElement);
+				if (brElement) {
+					brElement.remove();
+				}
 				console.log(lastChild);
 				lastChild.remove();
 				// and done.
@@ -507,75 +559,7 @@ export class TextBlock extends Contentblock {
 		return 0;
 	}
 
-	onclick(evt) {
-
-		// if (evt.button === 0) {
-		// 	console.log(`Pressed mouse 1 - Left`);
-		// } else if (evt.button === 2) {
-		// 	console.log(`Pressed 3 - Right`);
-		// } else if (evt.button === 1) {
-		// 	console.log(`Pressed 2 - Middle`);
-		// }
-
-		if (Contentblock.ActiveElement) {
-			Contentblock.ActiveElement.classList.remove("textblock-contextmenu");
-		}
-		if (Contentblock.PreviousElement) {
-			Contentblock.PreviousElement.classList.remove("textblock-contextmenu");
-		}
-		Contentblock.PreviousElement = Contentblock.ActiveElement;
-		Contentblock.ActiveElement = this.Element;
-
-		if (evt.button === 0) {
-
-			// Contentblock.ClearPreviousElement("PreviousElement_keydown", Contentblock.PreviousElement, "keydown", Contentblock.ElementEventHandlers["PreviousElement_keydown"] );
-			// Contentblock.ClearActiveElement("ActiveElement_keydown", Contentblock.ActiveElement, "keydown", Contentblock.ElementEventHandlers["ActiveElement_keydown"] );
 	
-			Contentblock.ClearPreviousElement("PreviousElement_keydown2", window, "keydown", Contentblock.ElementEventHandlers["PreviousElement_keydown2"] );
-			Contentblock.ClearActiveElement("ActiveElement_keydown2", window, "keydown", Contentblock.ElementEventHandlers["ActiveElement_keydown2"] );
-	
-			// Contentblock.ElementEventHandlers["ActiveElement_keydown"] = (ev)=>{
-			// 	console.log(ev.key);
-			// };
-
-			this.select();
-
-			Contentblock.ElementEventHandlers["ActiveElement_keydown2"] = (ev)=>{
-				console.log(ev.key);
-				this.edit(ev);
-			};
-			// Contentblock.ElementEventHandlers["ActiveElement_keydown"] = Contentblock.ElementEventHandlers["ActiveElement_keydown"];
-			// window.addEventListener("keydown", Contentblock.ElementEventHandlers["ActiveElement_keydown"] );
-			window.addEventListener("keydown", Contentblock.ElementEventHandlers["ActiveElement_keydown2"] );
-		} else if (evt.button === 2) {
-
-			
-			this.select();
-			Contentblock.ActiveElement.classList.add("textblock-contextmenu");
-
-		}
-		const callback = (ev2)=>{
-			if (! this.Element.contains(ev2.target)) {
-				Contentblock.ActiveElement = undefined;
-				this.deselect();
-				this.Element.classList.remove("textblock-contextmenu");
-				Contentblock.ElementEventHandlers["window_click"] = undefined;
-				delete Contentblock.ElementEventHandlers["window_click"];
-				window.removeEventListener("click", callback);
-				console.log(`removed window click event listener`);
-			}
-		};
-		if (! Object.keys(Contentblock.ElementEventHandlers).includes("window_click")) {
-			Contentblock.ElementEventHandlers["window_click"] = callback;
-			window.addEventListener("click", Contentblock.ElementEventHandlers["window_click"] );
-		}
-		console.log(`assigned window click event listener`);
-
-
-
-		console.log("Hello! This is the test message!");
-
-	}
 
 };
 

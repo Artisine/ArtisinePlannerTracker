@@ -186,6 +186,53 @@ PageManifestBasic.prototype.toString = function() {
 
 
 
+
+class Page {
+	constructor() {
+		this.Id = undefined;
+
+		this.Id_Promise = Utility.CreateSnowflake(new Date(), "Page");
+		this.Id_Promise.then((generatedSnowflake) => {
+			this.Id = generatedSnowflake;
+		}).catch(reason => console.error);
+
+		this.Title = "";
+		this.Description = "";
+		this.Content = ``;
+		this.CreatedAt = Date.now();
+		this.UpdatedAt = Date.now();
+		this.CreatedBy = undefined;
+		this.UpdatedBy = undefined;
+
+		/**
+		 * @type {HTMLElement} Element - This Page's physical Element reference
+		 */
+		this.Element = undefined;
+
+		/**
+		 * @type {Map<string, Contentblock>} ContentBlocks - This Page's ContentBlocks
+		 */
+		this.ContentBlocks = new Map();
+
+		
+	}
+
+	selfLog(...message) {
+		console.trace(`${new Date(Date.now()).toUTCString()}\n%c${this.ClassName} %c"${this.Name}" %c#%c${this.Id} %c: ${message.join("\n")}`,
+		"color:navy", "color:cornflowerblue", "color:black", "color:grey", "color:black");
+	}
+
+	add_new_TextBlock() {
+		const newThing = new TextBlock();
+		this.ContentBlocks.set(newThing.Id, newThing);
+
+
+	}
+
+
+}
+
+
 export default class PageService {
 	static Name = "PageService";
 
@@ -213,67 +260,12 @@ export default class PageService {
 		console.log(`%c[${this.Name}]%c TablePages = `, "color:purple", "color:grey");
 		console.log(this.TablePages);
 
-// 		const bob = new PageManifestBasic({
-// 			title: "Bob is too cool for you.",
-// 			description: "the life story of Bob.",
-// 			content: `
-// So, like, this is the story,
-// of a man named Stanley
-// Working in an office hunched over a desk all day
-// he desperately wished for something to whisk him away
-// But then one day the orders stopped coming in
-// He was free, in the office known as Print Of Bel Air
-// 			`
-// 		});
-// 		this.TablePages.Storage.set(bob.title, bob);
-// 		DatabaseService.Save_LocalStorage_state();
 
-		// console.log(`Bob\'s page = `, this.TablePages.Storage.get("Bob is too cool for you.") );
+		const bobThePage = new Page();
+		bobThePage.add_new_TextBlock();
 
 
-
-		const abc = new PageManifestBasic({
-			title: "Ur fat",
-			description: "Fat.",
-			content: `Hi there.
-You are not okay. But it's okay to be not okay. Inspirational speech here yeehaw. Long text to span to next line.
-Immediate next line, shouldn't break off to hard?
-
-I know. :(
-This is sad.
-
-
-Awooga
-
-
-
-
-
-
-
-Amogus?
-bye.`
-		});
-		// abc.render();
-
-
-		// const sam = new Contentblock();
-		// sam.init().then(rendered=>{
-		// 	// console.log(thing);
-		// 	// const rendered = thing.render();
-		// 	document.querySelector("#dashboard-content_pagespace").appendChild(rendered);
-		// 	console.log("Appended the rendered thing to pagespace");
-		// });
-
-		const jack = new TextBlock();
-		jack.init().then(rendered=>{
-			// const rendered = thing.render();
-			// document.querySelector("#dashboard-content_pagespace").appendChild(rendered);
-			rendered.Contentblock.setParent(document.querySelector("#dashboard-content_pagespace"));
-			jack.setTextAndDisplayText(`To be, or not to be. That, is the question. Were it not for the hooded man who goes nigh on the River Styx, one would seek to venture and explore the underworld. Alas, the gates of Hell are guarded by an ephemeral protector, a three-headed canine with parched appetite for Human.`);
-			console.log(`Appended the second render to pagespace`);
-		});
-
+		
 
 	}
 };
