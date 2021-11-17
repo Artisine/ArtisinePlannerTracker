@@ -444,8 +444,11 @@ export class TextBlock extends Contentblock {
 			this.edit(evt.data);
 			
 		} else if (evt.inputType === "insertParagraph") {
-			
-			// when pressing Enter key
+			// insertLineBreak is for Shift + Enter
+
+			// this when pressing Enter key
+
+			// console.log(evt);
 
 			/**
 			 * @type {HTMLElement} srcElement
@@ -457,10 +460,21 @@ export class TextBlock extends Contentblock {
 				console.log(`Last child, id = ${lastChild.id} ${lastChild.Id}`);
 				TextBlock.CreateNew();
 				console.log(`Pop this new child into its own TextBlock`);
+
+				// lastchild is the new-line which the user types
+				// after we create a new textblock, destroy the new-line
+				// to make it appear like we made a new textblock in the first place
+				// sneaky. I know.
+				console.log(lastChild);
+				lastChild.remove();
+				// and done.
 			}
 			console.log(lastChild);
 
 			return 1;
+		} else if (evt.inputType === "insertLineBreak") {
+			// let it do its thing
+			return 0;
 		}
 	}
 	edit(thing) {
