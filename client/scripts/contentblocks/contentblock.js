@@ -93,6 +93,8 @@ class TextBlockMarkup extends HTMLDivElement {
 		this.TextContent = ``; // normal
 		this.EscapedTextContent = ``; //replaces tabs and line-breaks with escape codes
 
+		this.SubElements = {};
+
 		this.init();
 	}
 
@@ -120,6 +122,8 @@ class TextBlockMarkup extends HTMLDivElement {
 		div.textContent = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
 		div.setAttribute("contenteditable", "true");
 
+		this.SubElements.TextHolder = div;
+
 		this.appendChild(div);
 		console.log(`Should have appened ${div} to ${this}`);
 	}
@@ -129,6 +133,8 @@ class TextBlockMarkup extends HTMLDivElement {
 		console.trace();
 		this.classList.add("selected");
 		this.querySelector(`div[name="text-holder"]`).click();
+
+		this.SubElements["TextHolder"].focus();
 		
 	}
 	custom_unfocus() {
