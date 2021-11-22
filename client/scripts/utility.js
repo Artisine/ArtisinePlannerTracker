@@ -50,7 +50,7 @@ export function BubbleSort(inputArr) {
 	}
 	// console.log(workArr);
 	return workArr;
-}
+};
 
 
 export function Wait(ms) {
@@ -63,8 +63,28 @@ export function Wait(ms) {
 			reject(`Argument ms was le 0. Must be gt 0.`);
 		}
 	});
-}
+};
 
+
+
+export function get_css_variable(varName) {
+	const val = window.getComputedStyle(document.documentElement).getPropertyValue(varName);
+	// console.log(`key = ${varName}, val = ${val}`);
+	return val;
+};
+export function set_css_variable(varName, val) {
+	document.documentElement.style.setProperty(varName, val);
+	// console.log(`key = ${varName}, set to ${val}`);
+};
+export function get_windowFontSizeInPixels() {
+	return parseFloat(this.get_css_variable("font-size"));
+};
+export function get_1rem_toPixels() {
+	return this.get_windowFontSizeInPixels();
+};
+export function convert_remToPixels(numberOfRem) {
+	return this.get_1rem_toPixels() * numberOfRem;
+};
 
 
 

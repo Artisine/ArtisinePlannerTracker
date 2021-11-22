@@ -1,7 +1,7 @@
 
 import * as Utility from "../utility.js";
 
-
+import PageService from "../page.js";
 
 
 
@@ -44,7 +44,7 @@ class ContentblockMarkup extends HTMLDivElement {
 		div.setAttribute("name", "ContentblockMarkup-div");
 		div.setAttribute("placeholder", "This is a placeholder text for ContentblockMarkup-div hehe ?");
 		div.style.width = "100%";
-		div.style.minHeight = `${Contentblock.convert_remToPixels(1) * parseFloat(Contentblock.get_css_variable("line-height")) }px`;
+		div.style.minHeight = `${Utility.convert_remToPixels(1) * parseFloat(Utility.get_css_variable("line-height")) }px`;
 		div.style.height = "max-content";
 		div.textContent = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
 
@@ -116,7 +116,7 @@ class TextBlockMarkup extends HTMLDivElement {
 		div.setAttribute("placeholder", "This is a placeholder text for TextBlockMarkup_text-holder hehe ?");
 		div.style.width = "100%";
 		// div.style.minHeight = `${Contentblock.convert_remToPixels(1)}px`;
-		div.style.minHeight = `${Contentblock.convert_remToPixels(2) }px`;
+		div.style.minHeight = `${Utility.convert_remToPixels(2) }px`;
 
 		// div.style.height = "max-content";
 		div.textContent = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
@@ -130,19 +130,16 @@ class TextBlockMarkup extends HTMLDivElement {
 
 
 	custom_focus() {
-		console.trace();
+		// console.trace();
 		this.classList.add("selected");
-		this.querySelector(`div[name="text-holder"]`).click();
-
+		// this.querySelector(`div[name="text-holder"]`).click();
 		this.SubElements["TextHolder"].focus();
 		
 	}
 	custom_unfocus() {
-
 		this.classList.remove("selected");
 		this.querySelector(`div[name="text-holder"]`).blur();
-		document.body.click();
-
+		// document.body.click();
 	}
 
 };
@@ -161,6 +158,7 @@ class TextBlockMarkup extends HTMLDivElement {
 
 
 export default class Contentblock {
+	static ClassName = "Contentblock";
 
 	/**
 	 * @type {Map<string, Contentblock>} GlobalMap - The global map of Contentblocks!
@@ -172,6 +170,11 @@ export default class Contentblock {
 		console.info(`${id} set ${obj} in ContentBlock GlobalMap.`);
 	}
 
+	/**
+	 * @type {ProxyHandler} ClickProxy - Click proxy to handle if user clicks off of a Content Block.
+	 */
+	static ClickProxy = undefined;
+
 	constructor(dateObject, name) {
 		this.ClassName = "Contentblock";
 		this.Name = "Contentblock";
@@ -181,8 +184,6 @@ export default class Contentblock {
 		 * @param {HTMLElement | undefined} Element - Element reference for this Block.
 		 */
 		this.Element = undefined;
-
-		this.Markup = undefined;
 
 		/**
 		 * @type {number} Position - The numeric integer position-index of a Content Block
@@ -201,6 +202,11 @@ export default class Contentblock {
 			Contentblock.AddToGlobalMap(this.Id, this);
 		}).catch(reason => console.error);
 		
+
+		/**
+		 * @type {PageService.Page | undefined} Page - This Contentblock's parent Page.
+		 */
+		this.Page = undefined;
 
 	}
 
@@ -228,6 +234,11 @@ export default class Contentblock {
 	setup_hooks() {
 		this.Element.addEventListener("click", (evt)=>{
 			console.log("Hello! This is the test message!");
+
+			// if (Contentblock.ClickProxy === undefined) {
+			// 	Contentblock.ClickProxy = new Proxy()
+			// }
+
 			this.focus();
 		});
 	}
@@ -256,6 +267,7 @@ export default class Contentblock {
 	}
 
 	focus() {
+		// return 0;
 		Contentblock.PreviousBlock = Contentblock.ActiveBlock;
 		Contentblock.ActiveBlock = this;
 		if (Contentblock.PreviousBlock !== undefined && Contentblock.PreviousBlock.Id !== Contentblock.ActiveBlock.Id) {
@@ -267,6 +279,7 @@ export default class Contentblock {
 		// this.Element.click();
 	}
 	unfocus() {
+		// return 0;
 		Contentblock.PreviousBlock = Contentblock.ActiveBlock;
 		Contentblock.ActiveBlock = undefined;
 		Contentblock.PreviousElement = Contentblock.ActiveElement;
@@ -300,26 +313,6 @@ export default class Contentblock {
 	 */
 	static PreviousElement = undefined;
 
-	static ElementEventHandlers = {
-
-	};
-	static ClearActiveElement(name, target, eventHandlerType, callback) {
-		if (Object.keys(this.ElementEventHandlers).includes(name)) {
-			target.removeEventListener(eventHandlerType, callback);
-			console.log(`Removed ${name} ${eventHandlerType} from ${target}`);
-			this.ElementEventHandlers[name] = undefined;
-			delete this.ElementEventHandlers[name];
-		}
-	}
-	static ClearPreviousElement(name, target, eventHandlerType, callback) {
-		if (Object.keys(this.ElementEventHandlers).includes(name)) {
-			target.removeEventListener(eventHandlerType, callback);
-			console.log(`Removed ${name} ${eventHandlerType} from ${target}`);
-
-			this.ElementEventHandlers[name] = undefined;
-			delete this.ElementEventHandlers[name];
-		}
-	}
 
 	static Once_init() {
 		window.customElements.define("contentblock-markup", ContentblockMarkup, {
@@ -330,25 +323,6 @@ export default class Contentblock {
 		});
 		
 		console.log(`%c[Contentblock] %cOnce Init executed`, "color:purple", "color:black");
-	}
-
-	static get_css_variable(varName) {
-		const val = window.getComputedStyle(document.documentElement).getPropertyValue(varName);
-		// console.log(`key = ${varName}, val = ${val}`);
-		return val;
-	}
-	static set_css_variable(varName, val) {
-		document.documentElement.style.setProperty(varName, val);
-		// console.log(`key = ${varName}, set to ${val}`);
-	}
-	static get_windowFontSizeInPixels() {
-		return parseFloat(this.get_css_variable("font-size"));
-	}
-	static get_1rem_toPixels() {
-		return this.get_windowFontSizeInPixels();
-	}
-	static convert_remToPixels(numberOfRem) {
-		return this.get_1rem_toPixels() * numberOfRem;
 	}
 
 	static KeyboardKeys_Modifiers = [
@@ -372,14 +346,24 @@ export default class Contentblock {
 };
 
 export class TextBlock extends Contentblock {
-	static CreateNew() {
+	static ClassName = "TextBlock";
+
+	/**
+	 * 
+	 * @param {PageService.Page} parentPage 
+	 * @returns {TextBlock}
+	 */
+	static CreateNew(parentPage) {
 		const newTextBlock = new TextBlock();
 		newTextBlock.render();
 		// ^ skipped the .init() - honestly forgot about init,
 		// but in this situation calling .init() can returning a promise
 		// is inconvenient, hence skip promise and go synchronous as it's faster
-		const pagespace = document.querySelector("#dashboard-content_pagespace");
-		newTextBlock.setParent(pagespace);
+		// const pagespace = document.querySelector("#dashboard-content_pagespace");
+		// newTextBlock.setParent(parentPage.Element.SubElements.PageContent.PageContentStorage);
+
+		parentPage.Element.SubElements.PageContent.PageContentStorage.append(newTextBlock.Element);
+
 		// newTextBlock.focus();
 
 		newTextBlock.setTextAndDisplayText(`I am ${newTextBlock.ClassName} ${newTextBlock.Name} number ${Contentblock.GlobalMap.size}`);
@@ -387,10 +371,10 @@ export class TextBlock extends Contentblock {
 
 		return newTextBlock;
 	}
-	constructor() {
-		super(new Date(), "TextBlock");
+	constructor(name="TextBlock") {
+		super(new Date(), name);
 		this.ClassName = "TextBlock";
-		this.Name = "TextBlock";
+		this.Name = name;
 
 		this.Text = ``; // the original text
 		this.EscapedText = ``; // original text modified to escape line-breaks, tabs, etc.
@@ -512,7 +496,7 @@ export class TextBlock extends Contentblock {
 			const lastChild = [... srcElement.children][srcElement.children.length - 1];
 			if (lastChild) {
 				console.log(`Last child, id = ${lastChild.id} ${lastChild.Id}`, lastChild, lastChild.parentNode);
-				TextBlock.CreateNew();
+				TextBlock.CreateNew(this.Page);
 				console.log(`Pop this new child into its own TextBlock`);
 
 				// lastchild is the new-line which the user types
@@ -569,6 +553,16 @@ export class TextBlock extends Contentblock {
 
 };
 
+export class DefaultPlaceholderBlock extends TextBlock {
+	constructor(name="DefaultPlaceholderBlock") {
+		super(name);
+		// TextBlock's constructor uses super(new Date(), name);
+		this.ClassName = "DefaultPlaceholderBlock";
+		this.Name = name;
+
+
+	}
+};
 
 
 Contentblock.Once_init();

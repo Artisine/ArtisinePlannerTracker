@@ -11,179 +11,6 @@ import Contentblock, { TextBlock } from "./contentblocks/contentblock.js";
 const Snowflake = Number;
 
 
-class PageManifestBasic {
-
-	/**
-	 * 
-	 * @param { {[key: string]: any} } config 
-	 */
-	constructor(config) {
-		this.id = ""; 
-		(async()=>{
-			const thing = await Utility.CreateSnowflake(new Date(), "");
-			// console.log({thing});
-			this.id = thing;
-		})();
-		console.log(this);
-		this.title = "";
-		this.description = "";
-		this.content = ``;
-		this.createdAt = Date.now();
-		this.updatedAt = Date.now();
-		this.createdBy = undefined;
-		this.updatedBy = undefined;
-
-		this.elementReference = undefined;
-
-
-		this.activeSelectedDiv = undefined;
-
-
-		for (let key in config) {
-			this[key] = config[key];
-		}
-	}
-
-	size() {
-		return this.title.length + this.description.length + this.content.length;
-	}
-
-	toJSON() {
-		return {
-			"title": this.title,
-			"description": this.description,
-			"content": this.content,
-			"createdAt": this.createdAt,
-			"updatedAt": this.updatedAt,
-			"createdBy": this.createdBy,
-			"updatedBy": this.updatedBy
-		};
-	}
-
-	static createFromJSON(jsonObject) {
-		return new PageManifestBasic(jsonObject);
-	}
-
-	processPageContent() {
-		let list = [];
-		console.log(this.content);
-
-		let lines = this.content.split("\n\n");
-		console.log(lines);
-		list = lines.map((str) => {
-			const fstr = (()=>{
-				if (str.startsWith("\n")) {
-					return str.substr(2);
-				} else {
-					return str;
-				}
-			})();
-			// const p_elem = document.createElement("p");
-			const div_elem = document.createElement("div");
-			// p_elem.innerHTML = fstr + "<br>";
-			div_elem.innerHTML = fstr + "<br>";
-			// console.log(p_elem);
-			console.log(div_elem);
-			// return p_elem;
-			return div_elem;
-		});
-
-		return list;
-	}
-
-	getId() {
-		return this.id;
-	}
-	render() {
-		const container = document.createElement("div");
-		container.id = "to be set";
-		(()=>{
-			Utility.Wait(500).then(()=>{
-				this.id = this.getId();
-				// console.log(this.id);
-				return `Page_${this.getId()}`;
-			}).then((containerId)=>{
-				// console.log(containerId);
-				container.id = containerId;
-				// console.log(container);
-			});
-		})();
-		// console.log(container);
-
-		container.style.height = "100%";
-		container.style.width = "100%";
-		container.style.backgroundColor = `white`;
-		container.style.zIndex = "4";
-		container.style.padding = "50px!important";
-
-		container.classList.add("page");
-
-		const innerContainer = document.createElement("div");
-		container.appendChild(innerContainer);
-		innerContainer.setAttribute("name", "abc");
-		this.processPageContent().forEach((divElem)=>{
-			innerContainer.appendChild(divElem);
-			divElem.addEventListener("click", ()=>{
-				const keyPressCallback = (evt)=>{
-					console.log(evt);
-					console.log(this.activeSelectedDiv);
-					const asd = this.activeSelectedDiv;
-					if (evt.key === "Enter") {
-						// divElem.innerHTML = divElem.innerHTML + "";
-						asd.textContent = `${asd.textContent}\n`;
-					} else if (evt.key === "Return" || evt.key === "Backspace") {
-						asd.textContent = (()=>{
-							const txtCont = asd.textContent;
-							return txtCont.substr(0, txtCont.length - 1);
-						})();
-					} else if (evt.key === "Space" || evt.key == " ") {
-						asd.textContent = `${asd.textContent} `;
-					} else if ( evt.key.length !== 1 ) {
-						// encompasses all the special functional keys
-						return 0;
-					} else {
-						asd.textContent = `${asd.textContent}${evt.key}`;
-					}
-					return 0;
-					// divElem.innerHTML = divElem.innerHTML + evt.key;
-				};
-
-				const thing = (evt) => {
-					keyPressCallback(evt);
-				}
-
-				if (this.activeSelectedDiv !== undefined) {
-					console.log(`Was not undefined`);
-					// clear the currently selected one's event handlers
-					this.activeSelectedDiv.removeEventListener("keydown", thing);
-					this.activeSelectedDiv.style.border = "";
-					this.activeSelectedDiv = undefined;
-				}
-
-				this.activeSelectedDiv = divElem;
-				console.log(this.activeSelectedDiv);
-				this.activeSelectedDiv.addEventListener("keydown", thing);
-				this.activeSelectedDiv.style.border = "1px solid red";
-				console.log(`${this.activeSelectedDiv.textContent.substr(0, 7)} div has focus now`);
-
-				// divElem.addEventListener("focusout", ()=>{
-				// 	console.log(`${divElem.textContent.substr(0, 7)} div now OUT of focus.`);
-				// });
-			});
-
-
-		});
-
-		this.elementReference = container;
-		PageService.ElementReference_PageSpace.appendChild(container);
-	}
-
-
-};
-PageManifestBasic.prototype.toString = function() {
-	return JSON.stringify(this.toJSON(), null, 4);
-};
-
 
 
 class PageMarkup extends HTMLDivElement {
@@ -270,8 +97,12 @@ class PageMarkup extends HTMLDivElement {
 };
 
 class Page {
+	static ClassName = "Page";
+
 	constructor() {
 		this.Id = undefined;
+		this.ClassName = "Page";
+		this.Name = "Page";
 
 		this.Id_Promise = Utility.CreateSnowflake(new Date(), "Page");
 		this.Id_Promise.then((generatedSnowflake) => {
@@ -312,9 +143,9 @@ class Page {
 		"color:navy", "color:cornflowerblue", "color:black", "color:grey", "color:black");
 	}
 
-	add_new_TextBlock() {
+	async add_new_TextBlock() {
 		const newThing = new TextBlock();
-		this.ContentBlocks.set(newThing.Id, newThing);
+		this.ContentBlocks.set(await newThing.Id_Promise, newThing);
 
 		function setEndOfContenteditable(contentEditableElement) {
 			var range, selection;
@@ -336,7 +167,9 @@ class Page {
 			}
 		}
 
-		newThing.init().then((markup) => {
+		await newThing.init().then((markup) => {
+			markup.Contentblock.Page = this;
+			console.log(`markup contentblock Page = `, markup.Contentblock.Page);
 			this.Element.SubElements.PageContent.PageContentStorage.append(markup);
 			console.log(`Attempting to focus/click new TextBlock ${markup.Contentblock.Name}`);
 			markup.setAttribute("tabindex", "1337");
@@ -346,20 +179,7 @@ class Page {
 		});
 
 
-		
-		// 	setCaretAtStartEnd(editableElm, idx) 
-		
-
-		// function setCaretAtStartEnd( node, atEnd ){
-		// 	const sel = document.getSelection();
-		// 	node = node.firstChild;
-
-		// 	if( sel.rangeCount ){
-		// 		['Start', 'End'].forEach(pos =>
-		// 			sel.getRangeAt(0)["set" + pos](node, atEnd ? node.length : 0)
-		// 		)
-		// 	}
-		// }
+		return newThing;
 	}
 
 	setup_hooks() {
@@ -369,14 +189,16 @@ class Page {
 		// });
 
 		this.Element.SubElements.PageHeader.HeaderTitle.H1.addEventListener("keydown", (evt)=>{
-			evt.preventDefault();
-			this.whenTitle_newline(evt);
+			if (evt.key === "Enter") {
+				evt.preventDefault();
+				this.whenTitle_newline(evt);
+			}
 		});
 	}
-	whenTitle_newline(evt) {
+	async whenTitle_newline(evt) {
 		evt.target.blur();
-		this.add_new_TextBlock();
-		
+		const newTextBlock = await this.add_new_TextBlock();
+		newTextBlock.focus();
 	}
 
 	render() {
@@ -401,6 +223,8 @@ class Page {
 
 export default class PageService {
 	static Name = "PageService";
+
+	static Page = Page;
 
 	/**
 	 * @type {Map<Snowflake, Page>} GlobalMap
