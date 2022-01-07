@@ -160,6 +160,11 @@ class TextBlockMarkup extends HTMLDivElement {
 export default class Contentblock {
 	static ClassName = "Contentblock";
 
+	static BlockTypeEnum = {
+		"Contentblock": 0,
+		"TextBlock": 1
+	};
+
 	/**
 	 * @type {Map<string, Contentblock>} GlobalMap - The global map of Contentblocks!
 	 */
@@ -178,7 +183,7 @@ export default class Contentblock {
 	constructor(dateObject, name) {
 		this.ClassName = "Contentblock";
 		this.Name = "Contentblock";
-		this.Id = undefined;
+		this.Id = Utility.CreateSnowflake(new Date(), "AccountName");
 
 		/**
 		 * @param {HTMLElement | undefined} Element - Element reference for this Block.
@@ -193,14 +198,14 @@ export default class Contentblock {
 		this.Position = Infinity;
 
 
-		this.Id_Promise = Utility.CreateSnowflake(dateObject, String(name));
-		this.Id_Promise.then((generatedSnowflake) => {
-			this.Id = generatedSnowflake;
-			// console.log(`Contentblock ${this.id} is now available`);
-			this.selfLog(`id has been set.`);
-			// Contentblock.GlobalMap.set(this.Id, this);
-			Contentblock.AddToGlobalMap(this.Id, this);
-		}).catch(reason => console.error);
+		// this.Id_Promise = Utility.CreateSnowflake(dateObject, String(name));
+		// this.Id_Promise.then((generatedSnowflake) => {
+		// 	this.Id = generatedSnowflake;
+		// 	// console.log(`Contentblock ${this.id} is now available`);
+		// 	this.selfLog(`id has been set.`);
+		// 	// Contentblock.GlobalMap.set(this.Id, this);
+		// 	Contentblock.AddToGlobalMap(this.Id, this);
+		// }).catch(reason => console.error);
 		
 
 		/**
@@ -208,6 +213,8 @@ export default class Contentblock {
 		 */
 		this.Page = undefined;
 
+
+		Contentblock.AddToGlobalMap(this.Id, this);
 	}
 
 	/**
@@ -353,16 +360,24 @@ export class TextBlock extends Contentblock {
 	 * @param {PageService.Page} parentPage 
 	 * @returns {TextBlock}
 	 */
-	static CreateNew(parentPage) {
+	static async CreateNew(parentPage) {
 		const newTextBlock = new TextBlock();
 		newTextBlock.render();
-		// ^ skipped the .init() - honestly forgot about init,
-		// but in this situation calling .init() can returning a promise
-		// is inconvenient, hence skip promise and go synchronous as it's faster
-		// const pagespace = document.querySelector("#dashboard-content_pagespace");
-		// newTextBlock.setParent(parentPage.Element.SubElements.PageContent.PageContentStorage);
 
-		parentPage.Element.SubElements.PageContent.PageContentStorage.append(newTextBlock.Element);
+		if (parentPage) {
+
+			parentPage.ContentBlocks.set(newTextBlock.Id, newTextBlock);
+			// ^ skipped the .init() - honestly forgot about init,
+			// but in this situation calling .init() can returning a promise
+			// is inconvenient, hence skip promise and go synchronous as it's faster
+			// const pagespace = document.querySelector("#dashboard-content_pagespace");
+			// newTextBlock.setParent(parentPage.Element.SubElements.PageContent.PageContentStorage);
+	
+			parentPage.Element.SubElements.PageContent.PageContentStorage.append(newTextBlock.Element);
+
+			parentPage.DefineBlocksPositionsUsingHeight();
+		}
+
 
 		// newTextBlock.focus();
 
@@ -404,7 +419,7 @@ export class TextBlock extends Contentblock {
 			this.focus();
 		});
 		this.Element.addEventListener("input", (evt)=>{
-			console.log(evt);
+			// console.log(evt);
 			this.hook_enterKeyPressed(evt);
 		});
 	}
@@ -496,7 +511,15 @@ export class TextBlock extends Contentblock {
 			const lastChild = [... srcElement.children][srcElement.children.length - 1];
 			if (lastChild) {
 				console.log(`Last child, id = ${lastChild.id} ${lastChild.Id}`, lastChild, lastChild.parentNode);
-				TextBlock.CreateNew(this.Page);
+				if (this.Page) {
+					TextBlock.CreateNew(this.Page);
+
+				} else {
+					// throw new Error(`uh oh - this.Page = undefined`);
+
+					this.Page = PageService.RecentInteractedPage;
+					TextBlock.CreateNew(this.Page);
+				}
 				console.log(`Pop this new child into its own TextBlock`);
 
 				// lastchild is the new-line which the user types
@@ -520,7 +543,7 @@ export class TextBlock extends Contentblock {
 		}
 	}
 	edit(thing) {
-		console.log(thing);
+		// console.log(thing);
 
 		const theKey = (thing instanceof KeyboardEvent) ? (thing.key) : ((typeof thing === "string") ? (thing) : (undefined));
 		if (theKey === undefined) {

@@ -7,7 +7,7 @@
 	/* --dashboard-sidebar-bg: hsl(0, 16%, 80%); */
 	--dashboard-sidebar-tc: var(--notion-light-sidebar-tc);
 	--dashboard-sidebar-bg: var(--notion-light-sidebar-bg);
-
+	
 	--dashboard-sidebar-tc-darker: rgba(20, 20, 15, 0.8);
 
 	--dashboard-sidebar-divider-color: hsl(0, 0%, 80%);
@@ -15,6 +15,8 @@
 	--dashboard-sidebar-button-active: hsl(0, 0%, 60%);
 	--dashboard-sidebar-button-hover2: hsl(5, 10%, 85%);
 	--dashboard-sidebar-button-active2: hsl(0, 5%, 75%);
+
+	--dashboard-sidebar-border-width: 2px;
 
 	--dashboard-content-bg: hsl(0, 0%, 100%);
 
@@ -78,6 +80,8 @@ div[name="dashboard_row_content"] {
 
 	user-select: none;
 
+	border-right: var(--dashboard-sidebar-border-width) solid var(--dashboard-sidebar-divider-color);
+	
 }
 #dashboard_sidebar_dragger {
 	width: var(--dashboard-sidebar-dragger-width);
@@ -145,6 +149,9 @@ div[name="dashboard_row_content"] {
 
 	width: var(--dashboard-sidebar-width);
 	/* position: relative; */
+
+	border-bottom: 1px solid var(--dashboard-sidebar-divider-color);
+	
 }
 #dashboard_sidebar > div[name="account-dialogue-button"]:hover , #dashboard_sidebar > div[name="account-dialogue-button"]:focus-within {
 	background-color: hsl(5, 10%, 85%);
@@ -438,7 +445,7 @@ div[name="dashboard_row_content"] {
 #dashboard_content div[name="help-menu"] {
 	display: none;
 	position: fixed;
-	display: flex;
+	/* display: flex; */
 	/* justify-content: center; */
 	align-items: center;
 	/* gap: 40px; */
@@ -554,6 +561,43 @@ div[name="dashboard_row_content"] {
 }
 
 
+#dashboard-content_navigation-bar {
+	background-color: var(--dashboard-sidebar-bg);
+
+	width: 100%;
+	height: var(--dashboard-sidebar-account-dialogue-height);
+
+	border-bottom: 1px solid var(--dashboard-sidebar-divider-color);
+}
+#dashboard-content_navigation-bar [name="breadcrumbs"] {
+	width: 100%;
+	height: 60%;
+	/* background-color: beige; */
+	color: var(--dashboard-sidebar-tc-darker) !important;
+
+	padding-bottom: 0 !important;
+
+}
+#dashboard-content_navigation-bar [name="breadcrumbs"] span {
+	width: max-content;
+	height: 100% !important;
+	font-weight: 600;
+	text-overflow: ellipsis;
+	overflow-x: hidden;
+	white-space: nowrap;
+}
+#dashboard-content_navigation-bar [name="status"] {
+	width: 100%;
+	height: 40%;
+	/* background-color: blue; */
+
+	font-size: 0.8rem;
+}
+#dashboard-content_navigation-bar [name="breadcrumbs"] , #dashboard-content_navigation-bar [name="status"]  {
+	padding-left: 1rem !important;
+	color: var(--dashboard-sidebar-tc);
+}
+
 
 #dashboard-content_pagespace {
 	/* background-color: red; */
@@ -563,7 +607,7 @@ div[name="dashboard_row_content"] {
 	z-index: 2;
 
 	width: 100%;
-	height: 100%;
+	height: calc(100% - var(--dashboard-sidebar-account-dialogue-height));
 	
 }
 

@@ -30,7 +30,9 @@ export class DashboardUI {
 		"FloatingHelpButtonActive": false,
 		"FloatingHelpButtonClickObserver": undefined,
 		"FloatingHelpMenuElement": undefined,
-		"FloatHelpContainerElement": undefined
+		"FloatHelpContainerElement": undefined,
+
+		"SidebarBorderWidth": undefined
 	};
 
 	/**
@@ -123,12 +125,22 @@ export class DashboardUI {
 		} 
 		const uic_accountDialogue = [...this.UIComponents.values()].find((item) => item.Name === "account-dialogue");
 		if (uic_accountDialogue !== undefined && uic_accountDialogue.render !== undefined) {
-			uic_accountDialogue.Size = new UDim2(0, this.Variables.SidebarWidth, 0, parseFloat( this.get_css_variable("--dashboard-sidebar-account-dialogue-height")) * parseFloat(this.get_css_variable("font-size")) );
+			uic_accountDialogue.Size = new UDim2(
+				0, 
+				this.Variables.SidebarWidth - this.Variables.SidebarBorderWidth, 
+				0, 
+				parseFloat( this.get_css_variable("--dashboard-sidebar-account-dialogue-height")) * parseFloat(this.get_css_variable("font-size")) 
+			);
 			uic_accountDialogue.render();
 		}
 		const uic_utilityButtons = [...this.UIComponents.values()].find((item) => item.Name === "utility-buttons");
 		if (uic_utilityButtons !== undefined && uic_utilityButtons.render !== undefined) {
-			uic_utilityButtons.Size = new UDim2(0, this.Variables.SidebarWidth, 0, uic_utilityButtons.Size.Y.Offset);
+			uic_utilityButtons.Size = new UDim2(
+				0, 
+				this.Variables.SidebarWidth - this.Variables.SidebarBorderWidth, 
+				0, 
+				uic_utilityButtons.Size.Y.Offset
+			);
 			uic_utilityButtons.render();
 		}
 		
@@ -136,10 +148,17 @@ export class DashboardUI {
 
 	static setup_sidebar_uiComponents() {
 
+		this.Variables.SidebarBorderWidth = parseFloat(this.get_css_variable("--dashboard-sidebar-border-width"));
+
 		const accountDialogue = new UIComponent(queryElement(`div[name="account-dialogue-button"]`), "account-dialogue");
 		accountDialogue.Position = new UDim2(0, 0, 0, 0);
 		// accountDialogue.Size = new UDim2(0, this.Variables.SidebarWidth, 0, 3 * parseFloat(window.getComputedStyle(queryElement("body")).getPropertyValue("font-size")) );
-		accountDialogue.Size = new UDim2(0, this.Variables.SidebarWidth, 0, parseFloat( this.get_css_variable("--dashboard-sidebar-account-dialogue-height")) * parseFloat(this.get_css_variable("font-size"))  );
+		accountDialogue.Size = new UDim2(
+			0, 
+			this.Variables.SidebarWidth - this.Variables.SidebarBorderWidth, 
+			0, 
+			parseFloat( this.get_css_variable("--dashboard-sidebar-account-dialogue-height")) * parseFloat(this.get_css_variable("font-size"))  
+		);
 
 		accountDialogue.AnchorPoint = new Vector2(0, 0);
 		
@@ -180,7 +199,12 @@ export class DashboardUI {
 		UIComponent.ApplyProperties(utilityButtons, {
 			Position: new UDim2(0, 0, 0, (parseFloat( this.get_css_variable("--dashboard-sidebar-account-dialogue-height")) + 1) * parseFloat(this.get_css_variable("font-size")) ),
 			SizeConstraint: UIComponent.Enum.SizeConstraint.XY,
-			Size: new UDim2(0, this.Variables.SidebarWidth, 0, 100 ),
+			Size: new UDim2(
+				0, 
+				this.Variables.SidebarWidth - this.Variables.SidebarBorderWidth, 
+				0, 
+				100 
+			),
 			AnchorPoint: new Vector2(0, 0)
 		});
 		(()=>{
@@ -190,7 +214,12 @@ export class DashboardUI {
 			const heightDividers = dividers.length * parseFloat(this.get_css_variable("--dashboard-sidebar-divider-height")) * parseFloat(this.get_css_variable("font-size"));
 			const heightTotal = Math.ceil( heightButtons + heightDividers );
 			UIComponent.ApplyProperties(utilityButtons, {
-				Size: new UDim2(0, this.Variables.SidebarWidth, 0, heightTotal)
+				Size: new UDim2(
+					0, 
+					this.Variables.SidebarWidth - this.Variables.SidebarBorderWidth, 
+					0, 
+					heightTotal
+				)
 			});
 			utilityButtons.render();
 			// console.log(utilityButtons);
@@ -207,7 +236,12 @@ export class DashboardUI {
 				parseFloat(this.get_css_variable("font-size"))*2 + utilityButtons.Size.Y.Offset + utilityButtons.Position.Y.Offset
 			),
 			SizeConstraint: UIComponent.Enum.SizeConstraint.XY,
-			Size: new UDim2(0, this.Variables.SidebarWidth, 0, 100),
+			Size: new UDim2(
+				0, 
+				this.Variables.SidebarWidth - this.Variables.SidebarBorderWidth, 
+				0, 
+				100
+			),
 			AnchorPoint: new Vector2(0, 0)
 		});
 		pageButtons.init();
@@ -251,7 +285,7 @@ export class DashboardUI {
 			} else {
 				// false -> true
 				this.Variables.FloatingHelpButtonActive = true;
-				this.Variables.FloatingHelpMenuElement.style.display = "block";
+				this.Variables.FloatingHelpMenuElement.style.display = "flex";
 				this.Variables.FloatingHelpMenuElement.style.transition = "opacity 1s";
 				this.Variables.FloatingHelpMenuElement.style.opacity = "1";
 

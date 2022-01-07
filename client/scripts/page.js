@@ -35,10 +35,12 @@ class PageMarkup extends HTMLDivElement {
 
 	createMarkup() {
 
-		(async ()=>{
-			this.setAttribute("name", `page-${await this.Page.Id_Promise}`);
-			this.setAttribute("id", this.getAttribute("name"));
-		})();
+		// (async ()=>{
+		// 	this.setAttribute("name", `page-${await this.Page.Id_Promise}`);
+		// 	this.setAttribute("id", this.getAttribute("name"));
+		// })();
+		this.setAttribute("name", `page-${this.Page.Id}`);
+		this.setAttribute("id", this.getAttribute("name"));
 		// this.classList.add("textblock", "contentblock");
 		this.classList.add("page");
 
@@ -100,14 +102,14 @@ class Page {
 	static ClassName = "Page";
 
 	constructor() {
-		this.Id = undefined;
+		this.Id = Utility.CreateSnowflake(new Date(), "AccountName");
 		this.ClassName = "Page";
 		this.Name = "Page";
 
-		this.Id_Promise = Utility.CreateSnowflake(new Date(), "Page");
-		this.Id_Promise.then((generatedSnowflake) => {
-			this.Id = generatedSnowflake;
-		}).catch(reason => console.error);
+		// this.Id_Promise = Utility.CreateSnowflake(new Date(), "Page");
+		// this.Id_Promise.then((generatedSnowflake) => {
+		// 	this.Id = generatedSnowflake;
+		// }).catch(reason => console.error);
 
 		this.Title = "";
 		this.Description = "";
@@ -127,6 +129,12 @@ class Page {
 		 */
 		this.ContentBlocks = new Map();
 
+
+		this.BlocksInfo = {
+			"BlockAtTop": undefined,
+			"BlockAtBottom": undefined
+		};
+
 		
 	}
 
@@ -143,9 +151,65 @@ class Page {
 		"color:navy", "color:cornflowerblue", "color:black", "color:grey", "color:black");
 	}
 
+
+	/**
+	 * 
+	 * @param {Number} positionNumber 
+	 * @returns {undefined | Contentblock} 
+	 */
+	GetBlockByPosition(positionNumber) {
+		const block = [...this.ContentBlocks.values()].find((item)=>{
+			if (item.Position === positionNumber) {
+				return item;
+			}
+		});
+		return block;
+	}
+
+	DefineBlocksPositionsUsingHeight() {
+		const blocks = [...this.ContentBlocks.values()];
+		/**
+		 * @type { [string, number][] } id_height
+		 */
+		let id_height = [];
+		for (let block of blocks) {
+			// const distanceY = block.Element.scrollTop;
+			const distanceY = block.Element.offsetTop;
+			id_height.push(
+				[block.Id, distanceY]
+			);
+		}
+		// alert(`id_height ${JSON.stringify(id_height)}`);
+		console.info(`id_height: `, id_height);
+		for (let k=0; k<blocks.length; k+=1) {
+			for (let i=0; i<blocks.length-1; i+=1) {
+				if ( id_height[i][1] > id_height[i+1][1] ) {
+					[ id_height[i], id_height[i+1] ] = [ id_height[i+1], id_height[i] ];
+				}
+			}
+		}
+		// alert(`id_height ${JSON.stringify(id_height)}`);
+		console.info(`id_height: `, id_height);
+
+		id_height.forEach((subarray, index) => {
+			const [blockId, distanceY] = subarray;
+			this.ContentBlocks.get(blockId).Position = index + 1;
+		});
+
+		this.BlocksInfo.BlockAtTop = this.ContentBlocks.get( id_height[0][0] );
+		this.BlocksInfo.BlockAtBottom = this.ContentBlocks.get( id_height[id_height.length - 1][0] );
+		
+	}
+
+
+
+
+
+
+
 	async add_new_TextBlock() {
 		const newThing = new TextBlock();
-		this.ContentBlocks.set(await newThing.Id_Promise, newThing);
+		this.ContentBlocks.set(newThing.Id, newThing);
 
 		function setEndOfContenteditable(contentEditableElement) {
 			var range, selection;
@@ -167,20 +231,75 @@ class Page {
 			}
 		}
 
-		await newThing.init().then((markup) => {
-			markup.Contentblock.Page = this;
-			console.log(`markup contentblock Page = `, markup.Contentblock.Page);
+		newThing.init().then((markup) => {
+			// console.log(`${markup} page = ${markup.Contentblock.Page}`);
+			// markup.Contentblock.Page = this;
+			newThing.Page = this;
+			console.log(`${newThing.Name} Page set to ${this.Name}`);
+			// console.log(`${markup} page = ${markup.Contentblock.Page}`);
+
+			// console.log(`markup contentblock Page = `, markup.Contentblock.Page);
 			this.Element.SubElements.PageContent.PageContentStorage.append(markup);
 			console.log(`Attempting to focus/click new TextBlock ${markup.Contentblock.Name}`);
-			markup.setAttribute("tabindex", "1337");
+			// markup.setAttribute("tabindex", "1337");
 			// markup.custom_focus();
 			markup.SubElements.TextHolder.focus();
 			setEndOfContenteditable(markup.SubElements.TextHolder);
+
+			this.DefineBlocksPositionsUsingHeight();
 		});
 
 
 		return newThing;
 	}
+
+	// /**
+	//  * 
+	//  * @param {Contentblock.BlockTypeEnum} blockTypeEnum 
+	//  * @param {*} position 
+	//  */
+	// async insert_block(blockTypeEnum, position=undefined) {
+	// 	if (blockTypeEnum === 1) {
+	// 		if (position !== undefined && typeof position === "number") {
+	// 			position = Math.round(position);
+				
+	// 			const entriesArray = [...this.ContentBlocks.entries()];
+	// 			console.log(`ContentBlocks Entries Array`, entriesArray);
+
+	// 			let shiftIndex = 0;
+
+	// 			const sizePageBlocks = this.ContentBlocks.size;
+	// 			if (position > sizePageBlocks) {
+	// 				position = sizePageBlocks;
+	// 				shiftIndex = 0;
+
+	// 				entriesArray[position] = (async()=>{
+	// 					const block = new TextBlock();
+	// 					return [block.Id, block];
+	// 				})();
+	// 			}
+	// 			if (position < 0) {
+	// 				position = 0;
+	// 				shiftIndex = 1;
+
+	// 				const block = new TextBlock();
+
+	// 				entriesArray.unshift( [block.Id, block] );
+	// 			}
+
+
+
+
+	// 			this.ContentBlocks = new Map(entriesArray);
+
+	// 			console.log(this.ContentBlocks);
+
+	// 		}
+	// 	} else {
+	// 		const txtblock = await this.add_new_TextBlock();
+	// 		txtblock.focus();
+	// 	}
+	// }
 
 	setup_hooks() {
 		// this.Element.addEventListener("keydown", (evt) => {
@@ -192,6 +311,31 @@ class Page {
 			if (evt.key === "Enter") {
 				evt.preventDefault();
 				this.whenTitle_newline(evt);
+			}
+		});
+
+		this.Element.addEventListener("click", (evt)=>{
+			console.log(evt.target);
+			PageService.RecentInteractedPage = this;
+
+			const blocks = [... this.ContentBlocks.values()];
+			console.log(blocks);
+
+			/**
+			 * @type {undefined | Contentblock} thing
+			 */
+			const thing = blocks.find((item)=>{
+				return (item.Element === evt.target || item.Element.contains(evt.target));
+			});
+			console.log(`thing = `, thing);
+			console.log(`Page ContentBlocks = `, this.ContentBlocks);
+			console.log(`Contentblock Map = `, Contentblock.GlobalMap);
+			if (thing !== undefined) {
+				thing.focus();
+			} else {
+				if (Contentblock.ActiveBlock) {
+					Contentblock.ActiveBlock.unfocus();
+				}
 			}
 		});
 	}
@@ -227,16 +371,37 @@ export default class PageService {
 	static Page = Page;
 
 	/**
+	 * @type {undefined | Page} RecentInteractedPage - The most recently viewed Page
+	 */
+	static RecentInteractedPage = undefined;
+
+	/**
 	 * @type {Map<Snowflake, Page>} GlobalMap
 	 */
 	static GlobalMap = new Map();
 
 	/**
-	 * @typedef {undefined | Object} TablePages;
+	 * @type {undefined | Object} TablePages;
 	 */
 	static TablePages = undefined;
 
 	static ElementReference_PageSpace = document.querySelector(`#dashboard-content_pagespace`);
+
+
+	static async CreateNewPage(name="Page") {
+		const newPage = new Page();
+		newPage.setTitle(name);
+		newPage.init().then((markup) => {
+			PageService.ElementReference_PageSpace.append(markup);
+			// console.log(`Appended to pagespace`);
+		}).catch(console.error);
+		console.log(newPage);
+
+		PageService.GlobalMap.set(newPage.Id, newPage);
+
+		return newPage;
+	}
+
 
 
 	static Write_PageManifestBasic_ToIndexedDB() {
@@ -249,7 +414,7 @@ export default class PageService {
 		});
 	}
 
-	static once_init() {
+	static async once_init() {
 		PageService.register_custom_PageMarkup_element();
 		console.log("hi");
 
@@ -258,17 +423,23 @@ export default class PageService {
 		// console.log(this.TablePages);
 
 
-		const bobThePage = new Page();
-		bobThePage.setTitle(`Bob the Page says Hello!`);
-		// bobThePage.add_new_TextBlock();
-		console.log(bobThePage);
-		bobThePage.init().then((markup) => {
-			document.querySelector("#dashboard-content_pagespace").append(markup);
-			console.log(`Appended to pagespace`);
-		}).catch(console.error);
-		console.log(bobThePage);
+		// const bobThePage = new Page();
+		// bobThePage.setTitle(`Bob the Page says Hello!`);
+		// // bobThePage.add_new_TextBlock();
+		// console.log(bobThePage);
+		// bobThePage.init().then((markup) => {
+		// 	document.querySelector("#dashboard-content_pagespace").append(markup);
+		// 	console.log(`Appended to pagespace`);
+		// }).catch(console.error);
+		// console.log(bobThePage);
 
-		
+		const bobThePage = await PageService.CreateNewPage("Bob The Page - says: Hello World! More text to overflow on to the next line? If you press Enter on this Title text, it'll create a new TextBlock below to type within. The lack of line-breaks is intentional.");
+		// bobThePage.insert_block(Contentblock.BlockTypeEnum.TextBlock);
+		// bobThePage.insert_block(Contentblock.BlockTypeEnum.TextBlock, 0);
+		// bobThePage.insert_block(Contentblock.BlockTypeEnum.TextBlock, 1);
+		// bobThePage.insert_block(Contentblock.BlockTypeEnum.TextBlock, 0);
+
+
 
 	}
 };
